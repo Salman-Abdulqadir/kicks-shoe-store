@@ -1,15 +1,38 @@
+//GETTING PRODUCTS WHEN THE STORE PAGE LOADS
 function get_products() {
   $.ajax({
     method: "POST",
-    url: "server/controller.php",
+    url: "../server/controller.php",
     dataType: "json",
     data: { type: "get_products" },
     success: (data) => {
       display_products(data);
+      console.log("success");
     },
   });
 }
 
+//ADDING A PRODUCT TO THE USER'S CART IF IT IS NOT THERE
+function add_product(item) {
+  let product_id = $(item).attr("product_id");
+
+  // sending an ajax request to create a cart item for the user
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: {
+      type: "get_products",
+      product_id,
+    },
+    success: (data) => {
+      if (data["success"]) {
+        alert("success");
+      }
+    },
+  });
+}
+//DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE
 function display_products(data) {
   html = "";
   for (let index in data) {
@@ -27,16 +50,16 @@ function display_products(data) {
     <div class="product">
         <div class="product-img">
             <button class="add_to_favorite"><i class="fa-solid fa-heart"></i></button>
-            <img src='${img_url}' alt="product${product_id}" />
+            <img src='../${img_url}' alt="product${product_id}" />
         </div>
         <div class="product-info">
             <h3>${brand}</h3>
             <p>${description}</p>
             <h4>${price}AED <span>${
-      quantity < 10 ? "only " + quantity + " left!" : " "
+      quantity < 5 ? "only " + quantity + " left!" : " "
     }</span></h4>
         </div>
-        <button class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button>
+        <button onclick="add_product(this);" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button>
 
     </div>
     `;

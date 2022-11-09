@@ -183,6 +183,7 @@ nav {
   margin: 3rem 0rem;
 }
 .title h2 {
+  color: black;
   border-bottom: 5px solid orange;
 }
 .latest-products {
@@ -199,6 +200,7 @@ nav {
 }
 .product-info,
 h4 {
+  color: black;
   margin: 1rem 0rem;
 }
 .product-img img {
