@@ -22,7 +22,7 @@ function add_product(item) {
     url: "../server/controller.php",
     dataType: "json",
     data: {
-      type: "get_products",
+      type: "add_product",
       product_id,
     },
     success: (data) => {
