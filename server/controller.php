@@ -12,9 +12,6 @@
 
     $_SESSION["user_id"] = '2';
 
-    $request_type = "get_products";
-
-
     switch($request_type){
         case "get_products":
             $final_result = get_products($connection);
@@ -94,10 +91,25 @@
         }
         return array("success" => false);
     }
-
+    // CHECKING IS PRODUCT IS ADDED TO USERS CART
+    function is_added($connection, $product_id){
+        if(isset($_SESSION["user_id"])){
+            $user_id = $_SESSION["user_id"];
+            
+            // CHECKING IF THE THE PRODUCT IS ADDED IN THE USERS CART
+            $is_added_query = "SELECT * FROM cart_item WHERE Product_id = '$product_id' AND User_id = '$user_id'";
+            $result = mysqli_query($connection, $is_added_query);
+            if(!$result){
+                return false;
+            }
+            if(mysqli_num_rows($result) != 1)
+                return false;
+            return true;
+        }
+        return false;
+    }
     // GETTING ALL THE PRODUCTS
     function get_products ($connection){
-        $user_id = isset($_SESSION['user_id'])? $_SESSION['user_id']: "";
 
         //QUERY THAT WILL SELECT ALL THE PRODUCTS FROM THE DB
         $query = "SELECT * FROM product";
@@ -113,20 +125,12 @@
         //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
         while($row = mysqli_fetch_array($result)){
             $product_id = $row["Product_id"];
-
-            // CHECKING IF THE THE PRODUCT IS ADDED IN THE USERS CART
-            $is_added = false;
-            $is_added_query = "SELECT * FROM cart_item WHERE Product_id = '$product_id' AND User_id = '$user_id'";
-            $result = mysqli_query($connection, $query);
-            if($result){
-                $is_added = true;
-            }
-
             $brand = $row["Brand"];
             $description = $row["Description"];
             $price = $row["Price"];
             $quantity = $row["Quantity"];
             $img_url = $row["Image_url"];
+            $is_added = is_added($connection, $product_id);
 
             //ADDING THE INFO THE DATA ARRAY
             $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added);

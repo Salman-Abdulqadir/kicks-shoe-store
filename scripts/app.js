@@ -7,7 +7,6 @@ function get_products() {
     data: { type: "get_products" },
     success: (data) => {
       display_products(data);
-      console.log("success");
     },
   });
 }
@@ -27,7 +26,7 @@ function add_product(item) {
     },
     success: (data) => {
       if (data["success"]) {
-        alert("success");
+        get_products();
       }
     },
   });
@@ -41,7 +40,6 @@ function get_cart() {
     dataType: "json",
     data: { type: "get_cart" },
     success: (data) => {
-      console.log(data);
       display_cart(data);
     },
   });
@@ -91,7 +89,7 @@ function delete_cart_item(product_id) {
     success: (data) => {
       if (data["success"]) {
         get_cart();
-        alert("removed successfully");
+        get_products();
       }
     },
   });
@@ -123,7 +121,7 @@ function display_cart(data) {
             <input value="1" type="text" disabled />
             <button class="btn btn-outline-warning">+</button>
           </div>
-          <button onclick="delete_cart_item(${product_id})"class="btn btn-outline-danger mt-4">
+          <button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mt-4">
             Delete <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </div>
@@ -159,12 +157,15 @@ function display_products(data) {
             <p>${description}</p>
             <h4>${price}AED <span>${
       quantity < 5 ? "only " + quantity + " left!" : " "
-    }</span></h4>
-        </div>
-        <button onclick="add_product(this);" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button>
+    }</span></h4> </div>`;
 
-    </div>
-    `;
+    // IF THE PRODUCT IS NOT ADD, ADD A BUTTON THAT ALLOWS THE USER TO ADD IT
+    if (!is_added)
+      html += `<button onclick="add_product(this);" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button></div>`;
+    else
+      html += `<span class="btn btn-warning">added to cart <i class="fa-solid fa-check"></i></span><button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mx-2">
+      <i class="fa fa-trash" aria-hidden="true"></i>
+    </button></div>`;
   }
   $(".latest-products").html(html);
 }
