@@ -47,6 +47,37 @@ function get_cart() {
   });
 }
 
+// TOTAL AMOUNT OF THE CART HTML
+function subtotal_html(data) {
+  let html = "";
+  let cart_items = data["cart_items"];
+
+  // ADDING THE NUMBER OF ITEMS
+  html += `<div class="flex bordered">
+            <h3>${cart_items.length} items</h3>
+            <p>price</p>
+          </div>
+          <div class="order">`;
+  for (let index in cart_items) {
+    let row = cart_items[index];
+
+    // reading the data from the current row
+    let description = row["description"];
+    let price = row["price"];
+    let quantity = row["quantity"];
+
+    html += `<div class="order-item flex">
+    <p>${quantity} X ${description}</p>
+    <p>AED ${quantity * price}</p>
+  </div>`;
+  }
+  html += `</div><div class="total-amount flex">
+            <h2 class="text-dark">Total Amount</h2>
+            <h2 class="text-warning">AED${data["total_price"]}</h2>
+          </div>`;
+  $(".subtotal").html(html);
+}
+
 //DELETE CART ITEM
 function delete_cart_item(product_id) {
   $.ajax({
@@ -88,9 +119,9 @@ function display_cart(data) {
           <h4>${brand}</h4>
           <p>${description}</p>
           <div class="product-quantity">
-            <button class="btn btn-outline-dark">+</button>
+            <button class="btn btn-outline-warning">+</button>
             <input value="1" type="text" disabled />
-            <button class="btn btn-outline-dark">-</button>
+            <button class="btn btn-outline-warningdfsjakl;">-</button>
           </div>
           <button onclick="delete_cart_item(${product_id})"class="btn btn-outline-danger mt-4">
             Delete <i class="fa fa-trash" aria-hidden="true"></i>
@@ -99,7 +130,7 @@ function display_cart(data) {
         <h3 id="price">AED${price}</h3>
       </div>`;
   }
-  html += `<h1> Total Amount: ${data["total_price"]}`;
+  subtotal_html(data);
   $(".items").html(html);
 }
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE

@@ -258,13 +258,27 @@ h4 span {
 }
 
 /* CART STYLING */
+.cart {
+  align-items: flex-start;
+}
+.subtotal {
+  flex: 1;
+  padding: 0rem 3rem;
+}
+.subtotal .bordered {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.147);
+  margin-bottom: 2rem;
+}
 
+.total-amount {
+  margin-bottom: 4rem;
+  border-top: 2px solid rgba(0, 0, 0, 0.147);
+}
 .items {
-  height: 60vh;
-  overflow-y: scroll;
+  flex: 1.5;
+  margin-right: 1rem;
 }
 .item {
-  width: 60%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

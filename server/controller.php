@@ -11,7 +11,8 @@
     $final_result = array();
 
     $_SESSION["user_id"] = '2';
-    // $request_type = "delete_cart_item";
+
+    // $request_type = "add_product";
     // $_POST["product_id"] = "1";
 
     switch($request_type){
@@ -68,12 +69,13 @@
             $product_id = $row["Product_id"];
             $brand = $row["Brand"];
             $description = $row["Description"];
+            $quantity = $row["Item_quantity"];
             $price = $row["Price"];
             $img_url = $row["Image_url"];
             $total_price += $price;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url);
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url, "quantity" => $quantity);
         } 
         return array("cart_items" => $data, "total_price" => $total_price);
         
@@ -84,7 +86,7 @@
         if(isset($_SESSION['user_id'])){
             $product_id = $_POST["product_id"];
             $user_id = $_SESSION['user_id'];
-            $query = "INSERT INTO cart_item (User_id, Product_id, Quantity) VALUES($user_id, $product_id, 1)";
+            $query = "INSERT INTO cart_item (User_id, Product_id, Item_quantity) VALUES($user_id, $product_id, 1)";
             $result = mysqli_query($connection, $query);
             if(!$result)
                 return array("success" => false, "message"=>"failed to add product");
