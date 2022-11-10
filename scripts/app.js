@@ -41,7 +41,27 @@ function get_cart() {
     dataType: "json",
     data: { type: "get_cart" },
     success: (data) => {
+      console.log(data);
       display_cart(data);
+    },
+  });
+}
+
+//DELETE CART ITEM
+function delete_cart_item(product_id) {
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: {
+      type: "delete_cart_item",
+      product_id,
+    },
+    success: (data) => {
+      if (data["success"]) {
+        get_cart();
+        alert("removed successfully");
+      }
     },
   });
 }
@@ -49,9 +69,9 @@ function get_cart() {
 //DISPLAYING THE CART
 function display_cart(data) {
   let html = "";
-
-  for (let index in data) {
-    let row = data[index];
+  let cart_items = data["cart_items"];
+  for (let index in cart_items) {
+    let row = cart_items[index];
 
     // reading the data from the current row
     let product_id = row["product_id"];
@@ -72,13 +92,14 @@ function display_cart(data) {
             <input value="1" type="text" disabled />
             <button class="btn btn-outline-dark">-</button>
           </div>
-          <button class="btn btn-outline-danger mt-4">
+          <button onclick="delete_cart_item(${product_id})"class="btn btn-outline-danger mt-4">
             Delete <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </div>
         <h3 id="price">AED${price}</h3>
       </div>`;
   }
+  html += `<h1> Total Amount: ${data["total_price"]}`;
   $(".items").html(html);
 }
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE

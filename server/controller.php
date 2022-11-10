@@ -10,8 +10,9 @@
     $request_type = isset($_POST["type"]) ? $_POST["type"] : "";
     $final_result = array();
 
-    $_SESSION["user_id"] = '1';
-    // $request_type = "get_cart";
+    $_SESSION["user_id"] = '2';
+    // $request_type = "delete_cart_item";
+    // $_POST["product_id"] = "1";
 
     switch($request_type){
         case "get_products":
@@ -23,8 +24,29 @@
         case "get_cart":
             $final_result = get_cart($connection);
             break;
+        case "delete_cart_item":
+            $final_result = delete_cart_item($connection);
+            break;
     }
     echo json_encode($final_result);
+
+    //DELETING A CART ITEM FROM THE CART
+    function delete_cart_item($connection){
+        if(isset($_SESSION['user_id'])){
+            $user_id = $_SESSION["user_id"];
+            $product_id = $_POST["product_id"];
+
+            $query = "DELETE FROM cart_item WHERE cart_item.User_id = '$user_id' AND cart_item.Product_id = '$product_id'";
+            $result = mysqli_query($connection, $query);
+            if(!$result){
+                return array("success"=>false);
+            }
+            return array('success' => true);
+        }
+        else{
+            return array("success"=>false);
+        }
+    }
 
 
     //GETTING THE CART ITEMS OF THE USER
@@ -39,6 +61,7 @@
             die("Database access failed: " . mysqli_error($connection));
         
         $data = array();
+        $total_price = 0;
 
         //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
         while($row = mysqli_fetch_array($result)){
@@ -47,11 +70,12 @@
             $description = $row["Description"];
             $price = $row["Price"];
             $img_url = $row["Image_url"];
+            $total_price += $price;
 
             //ADDING THE INFO THE DATA ARRAY
             $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url);
-        }
-            return $data;
+        } 
+        return array("cart_items" => $data, "total_price" => $total_price);
         
     }
     
