@@ -119,9 +119,9 @@ function display_cart(data) {
           <h4>${brand}</h4>
           <p>${description}</p>
           <div class="product-quantity">
-            <button class="btn btn-outline-warning">+</button>
+            <button class="btn btn-outline-warning">-</button>
             <input value="1" type="text" disabled />
-            <button class="btn btn-outline-warningdfsjakl;">-</button>
+            <button class="btn btn-outline-warning">+</button>
           </div>
           <button onclick="delete_cart_item(${product_id})"class="btn btn-outline-danger mt-4">
             Delete <i class="fa fa-trash" aria-hidden="true"></i>
@@ -146,6 +146,7 @@ function display_products(data) {
     let price = row["price"];
     let quantity = row["quantity"];
     let img_url = row["img_url"];
+    let is_added = row["is_added"];
 
     html += `
     <div class="product">
