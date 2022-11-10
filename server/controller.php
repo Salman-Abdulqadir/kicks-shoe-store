@@ -11,6 +11,7 @@
     $final_result = array();
 
     $_SESSION["user_id"] = '1';
+    // $request_type = "get_cart";
 
     switch($request_type){
         case "get_products":
@@ -19,8 +20,40 @@
         case "add_product":
             $final_result = add_product($connection);
             break;
+        case "get_cart":
+            $final_result = get_cart($connection);
+            break;
     }
     echo json_encode($final_result);
+
+
+    //GETTING THE CART ITEMS OF THE USER
+    function get_cart($connection){
+        $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "";
+
+
+        $query = "SELECT * FROM cart_item INNER JOIN product ON cart_item.Product_id = product.Product_id WHERE cart_item.User_id = $user_id";
+        $result = mysqli_query($connection, $query);
+
+        if(!$result)
+            die("Database access failed: " . mysqli_error($connection));
+        
+        $data = array();
+
+        //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
+        while($row = mysqli_fetch_array($result)){
+            $product_id = $row["Product_id"];
+            $brand = $row["Brand"];
+            $description = $row["Description"];
+            $price = $row["Price"];
+            $img_url = $row["Image_url"];
+
+            //ADDING THE INFO THE DATA ARRAY
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url);
+        }
+            return $data;
+        
+    }
     
     //ADDING A PRODUCT AS A CART ITEM FOR THE USER
     function add_product($connection){
@@ -30,7 +63,7 @@
             $query = "INSERT INTO cart_item (User_id, Product_id, Quantity) VALUES($user_id, $product_id, 1)";
             $result = mysqli_query($connection, $query);
             if(!$result)
-                return array("success" => false);
+                return array("success" => false, "message"=>"failed to add product");
             return array("success" => true);
         }
         return array("success" => false);

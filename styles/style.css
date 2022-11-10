@@ -257,6 +257,44 @@ h4 span {
   flex: 1;
 }
 
+/* CART STYLING */
+
+.items {
+  height: 60vh;
+  overflow-y: scroll;
+}
+.item {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.147);
+  padding-bottom: 1rem;
+}
+.form-select {
+  width: 5rem !important;
+}
+.item-image {
+  flex: 1.5;
+  height: 100%;
+  background-color: aliceblue;
+}
+.info {
+  flex: 1;
+}
+#price {
+  font-size: 1.5rem;
+  flex: 1;
+}
+
+.product-quantity button {
+  border-radius: 0;
+}
+.product-quantity input {
+  width: 50px;
+  display: inline;
+  text-align: center;
+}
 @keyframes linkFade {
   from {
     opacity: 0;

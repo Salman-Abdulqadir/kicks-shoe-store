@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- STYLES -->
     <link rel="stylesheet" href="../styles/login.css" />
-    <link rel="stylesheet" href="../styles/style.css?3" />
+    <link rel="stylesheet" href="../styles/style.css?4" />
     <link rel="stylesheet" href="../styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -53,13 +53,19 @@
     <!-- javascript script -->
     <script src="../scripts/app.js?7"></script>
     <style>
-      h3 {
+      h3,
+      h1 {
         color: black;
+      }
+      .third-section h1 {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
       }
     </style>
     <title>shop</title>
   </head>
-  <body onload="get_products();">
+  <body onload="get_cart();">
     <header>
       <nav class="flex">
         <a href="#"
@@ -83,8 +89,10 @@
     </header>
     <main>
       <section class="third-section">
-        <div class="title"><h2>Products</h2></div>
-        <div class="latest-products"></div>
+        <h1><i class="fa-solid fa-cart-shopping"></i> cart</h1>
+        <div class="cart">
+          <div class="items"></div>
+        </div>
       </section>
     </main>
     <script src="../scripts/animations.js"></script>
