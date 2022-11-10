@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- STYLES -->
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="./styles/style.css?11" />
     <link rel="stylesheet" href="./styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -65,9 +65,11 @@
           <li><a href="pages/contacts.html">Contact</a></li>
           <li><a href="pages/login.html">Login</a></li>
           <li>
-            <a href="pages/cart.html"
-              ><i class="fa-solid fa-cart-shopping"></i
-            ></a>
+            <a href="./pages/cart.html">
+              <i class="fa-solid fa-cart-shopping">
+                <span id="cart_count">0</span></i
+              >
+            </a>
           </li>
         </ul>
         <div class="burger">
@@ -88,9 +90,11 @@
           </p>
           <div class="add-to-bag">
             <button class="btn btn-outline-warning">
-              <i class="fa-solid fa-cart-shopping"></i>
+              <a href="pages/shop.html"
+                ><i class="text-dark fa-solid fa-cart-shopping"></i
+              ></a>
             </button>
-            <span>Add to Bag</span>
+            <span>Go to shop</span>
           </div>
         </div>
         <div class="main-image">

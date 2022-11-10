@@ -119,8 +119,9 @@
         if(!$result)
             die("Database access failed: " . mysqli_error($connection));
 
-        //INNIATING THE DATA ARRAY THAT WILL BE RETURNED
+        //INNIATING THE DATA ARRAY THAT WILL BE RETURNED AND THE NUMBER OF CART ITEMS
         $data = array();
+        $cart_count = 0;
 
         //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
         while($row = mysqli_fetch_array($result)){
@@ -131,11 +132,12 @@
             $quantity = $row["Quantity"];
             $img_url = $row["Image_url"];
             $is_added = is_added($connection, $product_id);
+            $cart_count += $is_added ? 1 : 0;
 
             //ADDING THE INFO THE DATA ARRAY
             $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added);
         }
-        return $data;
+        return array($data, "cart_count" => $cart_count);
     }
 
 

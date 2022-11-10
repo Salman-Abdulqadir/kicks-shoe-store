@@ -73,6 +73,7 @@ function subtotal_html(data) {
             <h2 class="text-dark">Total Amount</h2>
             <h2 class="text-warning">AED${data["total_price"]}</h2>
           </div>`;
+  $("#cart_count").html(cart_items.length);
   $(".subtotal").html(html);
 }
 
@@ -134,8 +135,9 @@ function display_cart(data) {
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE
 function display_products(data) {
   let html = "";
-  for (let index in data) {
-    let row = data[index];
+  let products = data[0];
+  for (let index in products) {
+    let row = products[index];
 
     // reading the data from the current row
     let product_id = row["product_id"];
@@ -163,9 +165,11 @@ function display_products(data) {
     if (!is_added)
       html += `<button onclick="add_product(this);" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button></div>`;
     else
-      html += `<span class="btn btn-warning">added to cart <i class="fa-solid fa-check"></i></span><button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mx-2">
+      html += `<button type="button" class="btn btn-warning" disabled data-bs-toggle="button" autocomplete="off">added to cart <i class="fa-solid fa-check"></i></button><button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mx-2">
       <i class="fa fa-trash" aria-hidden="true"></i>
     </button></div>`;
   }
+  $("#cart_count").html(data["cart_count"]);
   $(".latest-products").html(html);
+  console.log();
 }

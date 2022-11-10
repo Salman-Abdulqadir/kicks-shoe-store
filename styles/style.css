@@ -106,6 +106,9 @@ nav {
   flex: 1 30rem;
   padding: 1rem;
 }
+.main-image {
+  flex: 0.5 20rem;
+}
 .info h3 {
   font-size: calc(4rem + 1vw);
 }
@@ -130,7 +133,7 @@ nav {
 .second-section {
   min-width: 80vh;
   width: 90%;
-  margin: 3rem auto;
+  margin: 5rem auto;
 }
 .mission {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
@@ -280,6 +283,7 @@ h4 span {
 }
 .item {
   display: flex;
+  width: 80%;
   flex-wrap: wrap;
   align-items: center;
   border-bottom: 2px solid rgba(0, 0, 0, 0.147);
@@ -291,7 +295,7 @@ h4 span {
 .item-image {
   flex: 1.5;
   height: 100%;
-  background-color: aliceblue;
+  margin-right: 1rem;
 }
 .info {
   flex: 1;
