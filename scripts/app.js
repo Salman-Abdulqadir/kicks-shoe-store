@@ -1,20 +1,113 @@
+let password_match = false;
+
 //GETTING THE USERS INFO IF THEIR LOGGED IN
-function get_user_info(location="") {
+function get_user_info(location = "") {
   $.ajax({
     method: "POST",
-    url: location ? "server/controller.php":"../server/controller.php",
+    url: location ? "server/controller.php" : "../server/controller.php",
     dataType: "json",
     data: { type: "get_user_info" },
     success: (data) => {
       if (data["username"]) {
         $("#cart_count").html(data["item_count"]);
 
-        let logged_in = `<button class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
+        let logged_in = `<button onclick="logout();" class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
         $("#login_btn").html(logged_in);
         console.log("success");
       }
     },
   });
+}
+
+// LOGIN FUNCTION
+function login() {
+  let username = $("#username").val();
+  let password = $("#password").val();
+
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: { type: "login", username: username, password: password },
+    success: function (data) {
+      if (data["success"]) {
+        window.location.href = "../index.html";
+      }
+    },
+  });
+}
+
+//LOGOUT FUNCTION
+function logout() {
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: { type: "logout" },
+    success: function (data) {
+      window.location.href = "../index.html";
+    },
+  });
+}
+
+//REGISTERING A USER
+function register() {
+  if (password_match === true) {
+    let first_name = $("#first_name").val();
+    let last_name = $("#last_name").val();
+    let date_of_birth = $("#date_of_birth").val();
+    let gender = $("#gender").val();
+    let address = $("#address").val();
+    let email = $("#email").val();
+    let password = $("#password_register").val();
+
+    $.ajax({
+      method: "POST",
+      url: "../server/controller.php",
+      dataType: "json",
+      data: {
+        type: "register",
+        first_name: first_name,
+        last_name: last_name,
+        date_of_birth: date_of_birth,
+        gender: gender,
+        address: address,
+        email: email,
+        password: password,
+      },
+      success: function (data) {
+        if (data["success"]) {
+          window.location.href = "login.html";
+        } else {
+          $("#confirm_password_text")
+            .text("Something went wrong! Please try again.")
+            .css("color", "red");
+        }
+      },
+    });
+  }
+}
+
+// CONFIRMING THE PASSWORDS WHEN A USER REGISTERS
+function compare_passwords() {
+  let password = $("#password_register").val();
+  let confirm_password = $("#confirm_password_register").val();
+  if (password !== null || confirm_password !== null) {
+    if (password !== confirm_password) {
+      $("confirm_password_register").css("border", "1px solid red");
+      $("#confirm_password_text")
+        .text("Passwords don't match!")
+        .css("color", "red");
+    } else {
+      $("confirm_password_register").css("border", "1px solid green");
+      $("#confirm_password_text")
+        .text("Passwords match!")
+        .css("color", "green");
+      password_match = true;
+    }
+  } else {
+    $("#confirm_password_text").hide();
+  }
 }
 
 //GETTING PRODUCTS WHEN THE STORE PAGE LOADS

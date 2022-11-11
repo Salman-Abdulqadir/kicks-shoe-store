@@ -107,63 +107,126 @@
           <div class="col-lg-6 col-md-6 col-sm-12">
             <h3>CREATER A NEW ACCOUNT</h3>
             <div class="row">
-              <form class="form-box" action="" method="post">
+              <div class="form-box" action="" method="post">
+                <div class="col-md-12 compact-entry-area">
+                  <div class="col-md-6">
+                    <input
+                      id="first_name"
+                      class="login-input"
+                      type="text"
+                      name="first_name"
+                      placeholder="First Name"
+                      onfocus="this.placeholder = ''"
+                      onblur="this.placeholder = 'First Name'"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      id="last_name"
+                      class="login-input"
+                      type="text"
+                      name="last_name"
+                      placeholder="Last Name"
+                      onfocus="this.placeholder = ''"
+                      onblur="this.placeholder = 'Last Name'"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-12 compact-entry-area">
+                  <div class="col-md-6">
+                    <input
+                      id="date_of_birth"
+                      type="text"
+                      class="login-input"
+                      placeholder="Date of Birth"
+                      onfocus="this.type='date'"
+                      onblur="this.type='text'"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 select-gender-area">
+                    <select
+                      name="gender"
+                      id="gender"
+                      class="login-input"
+                      required
+                    >
+                      <option
+                        class="gender-placeholder"
+                        value=""
+                        disabled
+                        selected
+                        hidden
+                      >
+                        Gender
+                      </option>
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="col-md-12">
                   <input
-                    class="login-input"
                     type="text"
-                    name="first"
-                    placeholder="First Name"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'First Name'"
+                    id="address"
+                    class="login-input"
+                    placeholder="Town, Emirate"
+                    onfocus="this.placeholder=''"
+                    onblur="this.placeholder='Town, Emirate'"
+                    required
                   />
                 </div>
                 <div class="col-md-12">
                   <input
-                    class="login-input"
-                    type="text"
-                    name="lastname"
-                    placeholder="Last Name"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'Last Name'"
-                  />
-                </div>
-                <div class="col-md-12">
-                  <input
+                    id="email"
                     class="login-input"
                     type="text"
                     name="email"
                     placeholder="Email"
                     onfocus="this.placeholder = ''"
                     onblur="this.placeholder = 'Email'"
+                    required
                   />
                 </div>
                 <div class="col-md-12 signup-password-area">
                   <div class="col-sm-12">
                     <input
+                      id="password_register"
                       class="login-input signup-password"
                       type="password"
-                      name="password"
+                      name="password_register"
                       placeholder="Password"
                       onfocus="this.placeholder = ''"
+                      onkeyup="compare_passwords();"
                       onblur="this.placeholder = 'Password'"
+                      required
                     />
                   </div>
                   <div class="col-sm-12">
                     <input
+                      id="confirm_password_register"
                       class="login-input signup-password confirm"
                       type="password"
-                      name="confirm_password"
+                      name="confirm_password_register"
                       placeholder="Confirm Password"
                       onfocus="this.placeholder = ''"
+                      onkeyup="compare_passwords();"
                       onblur="this.placeholder = 'Confirm Password'"
+                      required
                     />
+                  </div>
+                  <div id="confirm_password_text" class="col-sm-12">
+                    <p></p>
                   </div>
                 </div>
                 <div class="col-md-12">
-                  <button class="login-button"><strong>signup</strong></button>
+                  <button onclick="register();" class="login-button">
+                    <strong>signup</strong>
+                  </button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>

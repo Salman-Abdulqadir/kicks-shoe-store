@@ -57,10 +57,11 @@
       h1 {
         color: black;
       }
-      .third-section h1 {
-        font-size: 3rem;
-        text-align: center;
-        margin-bottom: 2rem;
+      div h1 {
+        padding: 1rem;
+        font-size: 1.5rem;
+        width: 80%;
+        background-color: lightgray;
       }
     </style>
     <title>shop</title>
@@ -78,7 +79,7 @@
           <li>
             <a href="./cart.html">
               <i class="fa-solid fa-cart-shopping">
-                <span class="badge bg-dark" id="cart_count">0</span></i
+                <span class="badge bg-warning" id="cart_count">0</span></i
               >
             </a>
           </li>
@@ -93,9 +94,11 @@
     </header>
     <main>
       <section class="third-section">
-        <h1><i class="fa-solid fa-cart-shopping"></i> cart</h1>
-        <div class="cart flex">
-          <div class="items"></div>
+        <div class="cart">
+          <div>
+            <h1><i class="fa-solid fa-cart-shopping"></i> Your cart</h1>
+            <div class="items"></div>
+          </div>
           <div class="subtotal"></div>
         </div>
       </section>

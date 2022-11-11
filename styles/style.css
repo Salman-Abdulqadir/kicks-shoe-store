@@ -262,11 +262,12 @@ h4 span {
 
 /* CART STYLING */
 .cart {
+  display: flex;
   align-items: flex-start;
 }
 .subtotal {
-  flex: 1;
-  padding: 0rem 3rem;
+  width: 70%;
+  padding: 1rem;
 }
 .subtotal .bordered {
   border-bottom: 2px solid rgba(0, 0, 0, 0.147);
@@ -278,7 +279,6 @@ h4 span {
   border-top: 2px solid rgba(0, 0, 0, 0.147);
 }
 .items {
-  flex: 1.5;
   margin-right: 1rem;
 }
 .item {
