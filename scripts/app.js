@@ -1,3 +1,22 @@
+//GETTING THE USERS INFO IF THEIR LOGGED IN
+function get_user_info(location="") {
+  $.ajax({
+    method: "POST",
+    url: location ? "server/controller.php":"../server/controller.php",
+    dataType: "json",
+    data: { type: "get_user_info" },
+    success: (data) => {
+      if (data["username"]) {
+        $("#cart_count").html(data["item_count"]);
+
+        let logged_in = `<button class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
+        $("#login_btn").html(logged_in);
+        console.log("success");
+      }
+    },
+  });
+}
+
 //GETTING PRODUCTS WHEN THE STORE PAGE LOADS
 function get_products() {
   $.ajax({
@@ -7,6 +26,7 @@ function get_products() {
     data: { type: "get_products" },
     success: (data) => {
       display_products(data);
+      get_user_info();
     },
   });
 }
@@ -41,6 +61,7 @@ function get_cart() {
     data: { type: "get_cart" },
     success: (data) => {
       display_cart(data);
+      get_user_info();
     },
   });
 }
@@ -73,7 +94,6 @@ function subtotal_html(data) {
             <h2 class="text-dark">Total Amount</h2>
             <h2 class="text-warning">AED${data["total_price"]}</h2>
           </div>`;
-  $("#cart_count").html(cart_items.length);
   $(".subtotal").html(html);
 }
 
@@ -169,7 +189,6 @@ function display_products(data) {
       <i class="fa fa-trash" aria-hidden="true"></i>
     </button></div>`;
   }
-  $("#cart_count").html(data["cart_count"]);
   $(".latest-products").html(html);
   console.log();
 }

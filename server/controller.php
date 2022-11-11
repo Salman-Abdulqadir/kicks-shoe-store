@@ -10,8 +10,8 @@
     $request_type = isset($_POST["type"]) ? $_POST["type"] : "";
     $final_result = array();
 
-    $_SESSION["user_id"] = '2';
-
+    $_SESSION["user_id"] = '1';
+    // $request_type = "get_user_info";
     switch($request_type){
         case "get_products":
             $final_result = get_products($connection);
@@ -24,6 +24,9 @@
             break;
         case "delete_cart_item":
             $final_result = delete_cart_item($connection);
+            break;
+        case "get_user_info":
+            $final_result = get_user_info($connection);
             break;
     }
     echo json_encode($final_result);
@@ -91,6 +94,23 @@
         }
         return array("success" => false);
     }
+
+    //GETTING THE USERS INFO
+    function get_user_info($connection){
+        if(isset($_SESSION["user_id"])){
+            $user_id = $_SESSION["user_id"];
+            $query = "SELECT Users.FirstName, count(*) AS count FROM cart_item INNER JOIN Users ON cart_item.User_id =  Users.ID WHERE User_id = '$user_id'";
+            $result = mysqli_query($connection, $query);
+
+            if($result){
+                $data = mysqli_fetch_array($result);
+                return array("username" => $data["FirstName"], "item_count" => $data["count"]);
+            }
+                
+        }
+        return array("user" => false, "item_count" => false);
+    }
+
     // CHECKING IS PRODUCT IS ADDED TO USERS CART
     function is_added($connection, $product_id){
         if(isset($_SESSION["user_id"])){

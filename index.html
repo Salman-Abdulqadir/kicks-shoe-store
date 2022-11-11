@@ -50,12 +50,13 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <!-- javascript script -->
     <script src="scripts/app.js?2"></script>
 
     <title>Home</title>
   </head>
-  <body>
+  <body onload="get_user_info('home');">
     <header>
       <nav class="flex">
         <a href="#"><img src="./images/logo.webp" alt="logo" class="logo" /></a>
@@ -63,14 +64,14 @@
           <li><a href="./index.html">Home</a></li>
           <li><a href="pages/shop.html">Shop</a></li>
           <li><a href="pages/contacts.html">Contact</a></li>
-          <li><a href="pages/login.html">Login</a></li>
           <li>
-            <a href="./pages/cart.html">
+            <a href="pages/cart.html">
               <i class="fa-solid fa-cart-shopping">
-                <span id="cart_count">0</span></i
+                <span class="badge bg-dark" id="cart_count">0</span></i
               >
             </a>
           </li>
+          <li id="login_btn"><a href="pages/login.html">Login</a></li>
         </ul>
         <div class="burger">
           <div class="line1"></div>
