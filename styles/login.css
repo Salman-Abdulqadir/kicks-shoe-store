@@ -275,6 +275,26 @@ label.login-checkbox {
   cursor: pointer;
 }
 
+#confirm_password_text {
+  margin-top: 5px;
+}
+
+.compact-entry-area {
+  display: flex;
+  flex-wrap: wrap;
+  /* padding-right: 5px; */
+}
+
+.compact-entry-area .col-md-6 {
+  display: inline-block;
+  width: 47%;
+  margin: 0 5px 15px;
+  padding: 0 5px 0 0;
+}
+
+select.gender-placeholder {
+  color: #777777 !important;
+}
 /* Signup */
 
 /* .signup-password-area {
