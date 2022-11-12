@@ -19,3 +19,22 @@ VALUES (1, "Nike", "Men's Kyrie Infinity Basketball Shoe", 460, 5, "images/produ
 (8, "Nike", "Men's zoom basketball shoes", 860, 5, "images/product8.png"),
 (9, "Nike", "Men's Kyrie basketball shoes", 1060, 5, "images/product9.png");
 (10, "Nike", "Men's Kyrie basketball shoes", 560, 12, "images/main-nike-pic.png");
+
+-- CART ITEM TABLE
+CREATE TABLE cart_item (
+    User_id INT NOT NULL,
+    Product_id INT NOT NULL,
+    Item_quantity INT NOT NULL,
+    PRIMARY KEY (User_id, Product_id),
+    FOREIGN KEY (User_id) REFERENCES Users(ID),
+    FOREIGN KEY (Product_id) REFERENCES product(Product_id)
+);
+
+-- WISH LIST TABLE
+CREATE TABLE wish_list (
+User_id INT NOT NULL,
+Product_id INT NOT NULL,
+PRIMARY KEY (User_id, Product_id),
+FOREIGN KEY (User_id) REFERENCES Users(ID),
+FOREIGN KEY (Product_id) REFERENCES product(Product_id)
+);

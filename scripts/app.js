@@ -245,6 +245,28 @@ function display_cart(data) {
   subtotal_html(data);
   $(".items").html(html);
 }
+
+//ADDING A PRODUCT TO THE USER'S WISHLIST IF IT IS NOT THERE
+function wishlist_requests(product_id, request) {
+  // sending an ajax request to create a wishlist item for the user
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: {
+      type: request,
+      product_id,
+    },
+    success: (data) => {
+      if (data["success"]) {
+        get_products();
+      }
+    },
+  });
+}
+
+// REMOVING WISHLIST ITEM
+
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE
 function display_products(data) {
   let html = "";
@@ -260,12 +282,23 @@ function display_products(data) {
     let quantity = row["quantity"];
     let img_url = row["img_url"];
     let is_added = row["is_added"];
+    let is_wish = row["is_wish"];
 
     html += `
     <div class="product">
-        <div class="product-img">
-            <button class="add_to_favorite"><i class="fa-solid fa-heart"></i></button>
-            <img src='../${img_url}' alt="product${product_id}" />
+        <div class="product-img">`;
+    if (is_wish) {
+      html += `<button onclick="wishlist_requests(${product_id}, 'remove_wishlist_item')" class="add_to_favorite">
+                <i style="color:tomato" class="fa-solid fa-heart"></i>
+              </button>;`;
+    } else {
+      html += `<button onclick="wishlist_requests(${product_id}, 'add_to_wishlist')" class="add_to_favorite">
+                <i class="fa-solid fa-heart"></i>
+              </button>;`;
+    }
+
+    html += `
+        <img src='../${img_url}' alt="product${product_id}" />
         </div>
         <div class="product-info">
             <h3>${brand}</h3>

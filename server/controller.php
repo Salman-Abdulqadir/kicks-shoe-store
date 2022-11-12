@@ -19,7 +19,8 @@
     // $_POST["gender"]
     // $_POST["address"]
 
-    // $request_type = "get_user_info";
+    // $request_type = "add_to_wishlist";
+    // $_POST["product_id"] = '1';
     switch($request_type){
         case "get_products":
             $final_result = get_products($connection);
@@ -45,6 +46,13 @@
         case "get_user_info":
             $final_result = get_user_info($connection);
             break;
+        case "add_to_wishlist":
+            $final_result = add_to_wishlist($connection);
+            break;
+        case "remove_wishlist_item":
+            $final_result = remove_wishlist_item($connection);
+            break;
+
     }
     echo json_encode($final_result);
 
@@ -136,6 +144,23 @@
             return array("success"=>false);
         }
     }
+    //DELETING A WISHLIST ITEM FROM THE CART
+    function remove_wishlist_item($connection){
+        if(isset($_SESSION['user_id'])){
+            $user_id = $_SESSION["user_id"];
+            $product_id = $_POST["product_id"];
+
+            $query = "DELETE FROM wish_list WHERE wish_list.User_id = '$user_id' AND wish_list.Product_id = '$product_id'";
+            $result = mysqli_query($connection, $query);
+            if(!$result){
+                return array("success"=>false);
+            }
+            return array('success' => true);
+        }
+        else{
+            return array("success"=>false);
+        }
+    }
 
 
     //GETTING THE CART ITEMS OF THE USER
@@ -183,6 +208,20 @@
         return array("success" => false);
     }
 
+    //ADDING A PRODUCT AS A WISH LIST ITEM FOR THE USER
+    function add_to_wishlist($connection){
+        if(isset($_SESSION['user_id'])){
+            $product_id = $_POST["product_id"];
+            $user_id = $_SESSION['user_id'];
+            $query = "INSERT INTO wish_list (User_id, Product_id) VALUES($user_id, $product_id)";
+            $result = mysqli_query($connection, $query);
+            if(!$result)
+                return array("success" => false, "message"=>"failed to add product");
+            return array("success" => true);
+        }
+        return array("success" => false);
+    }
+
     //GETTING THE USERS INFO
     function get_user_info($connection){
         if(isset($_SESSION["user_id"])){
@@ -207,12 +246,12 @@
     }
 
     // CHECKING IS PRODUCT IS ADDED TO USERS CART
-    function is_added($connection, $product_id){
+    function is_added($connection, $product_id, $table){
         if(isset($_SESSION["user_id"])){
             $user_id = $_SESSION["user_id"];
             
             // CHECKING IF THE THE PRODUCT IS ADDED IN THE USERS CART
-            $is_added_query = "SELECT * FROM cart_item WHERE Product_id = '$product_id' AND User_id = '$user_id'";
+            $is_added_query = "SELECT * FROM $table WHERE Product_id = '$product_id' AND User_id = '$user_id'";
             $result = mysqli_query($connection, $is_added_query);
             if(!$result){
                 return false;
@@ -246,11 +285,12 @@
             $price = $row["Price"];
             $quantity = $row["Quantity"];
             $img_url = $row["Image_url"];
-            $is_added = is_added($connection, $product_id);
+            $is_added = is_added($connection, $product_id, "cart_item");
+            $is_wishlist_item = is_added($connection, $product_id, "wish_list");
             $cart_count += $is_added ? 1 : 0;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added);
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item);
         }
         return array($data, "cart_count" => $cart_count);
     }
