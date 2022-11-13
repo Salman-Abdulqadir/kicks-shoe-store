@@ -52,6 +52,9 @@
         case "remove_wishlist_item":
             $final_result = remove_wishlist_item($connection);
             break;
+        case "get_wish_list":
+            $final_result = get_wish_list($connection);
+            break;
 
     }
     echo json_encode($final_result);
@@ -144,6 +147,7 @@
             return array("success"=>false);
         }
     }
+
     //DELETING A WISHLIST ITEM FROM THE CART
     function remove_wishlist_item($connection){
         if(isset($_SESSION['user_id'])){
@@ -162,7 +166,30 @@
         }
     }
 
+    //GETTING THE WISH LIST OF A USER
+    function get_wish_list($connection){
+        $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "";
+        $query = "SELECT * FROM wish_list INNER JOIN product ON wish_list.Product_id = product.Product_id WHERE wish_list.User_id = $user_id";
+        $result = mysqli_query($connection, $query);
 
+        if(!$result)
+            die("Database access failed: " . mysqli_error($connection));
+        
+        $data = array();
+
+        //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
+        while($row = mysqli_fetch_array($result)){
+            $product_id = $row["Product_id"];
+            $brand = $row["Brand"];
+            $description = $row["Description"];
+            $price = $row["Price"];
+            $img_url = $row["Image_url"];
+
+            //ADDING THE INFO THE DATA ARRAY
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url);
+        } 
+        return $data;  
+    }
     //GETTING THE CART ITEMS OF THE USER
     function get_cart($connection){
         $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "";
@@ -190,8 +217,7 @@
             //ADDING THE INFO THE DATA ARRAY
             $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url, "quantity" => $quantity);
         } 
-        return array("cart_items" => $data, "total_price" => $total_price);
-        
+        return array("cart_items" => $data, "total_price" => $total_price);  
     }
     
     //ADDING A PRODUCT AS A CART ITEM FOR THE USER

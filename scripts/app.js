@@ -19,6 +19,45 @@ function get_user_info(location = "") {
   });
 }
 
+//GETTING THE WISH LIST OF THE USER
+function get_wish_list() {
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: { type: "get_wish_list" },
+    success: (data) => {
+      display_wish_list(data);
+    },
+  });
+}
+
+// DISPLAYING THE WISH LIST OF THE USER
+function display_wish_list(data) {
+  let html = "";
+  for (let index in data) {
+    let row = data[index];
+    let product_id = row["product_id"];
+    let img_url = row["img_url"];
+    let brand = row["brand"];
+    let description = row["description"];
+    let price = row["price"];
+
+    html += `<div class="wish-item">
+              <img src="../${img_url}" alt="image_${product_id}" />
+              <div>
+                <h4>${brand}</h4>
+                <p>${description}</p>
+                <p>AED${price}</p>
+                <button onclick="add_product(this);wishlist_requests(${product_id}, 'remove_wishlist_item')" product_id="${product_id}" class="btn btn-outline-dark">
+                  move to cart
+                  <i class="fa fa-cart-shopping" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>`;
+  }
+  $(".wish-list").html(html);
+}
 // LOGIN FUNCTION
 function login() {
   let username = $("#username").val();
@@ -140,6 +179,7 @@ function add_product(item) {
     success: (data) => {
       if (data["success"]) {
         get_products();
+        get_cart();
       }
     },
   });
@@ -184,7 +224,7 @@ function subtotal_html(data) {
   </div>`;
   }
   html += `</div><div class="total-amount flex">
-            <h2 class="text-dark">Total Amount</h2>
+            <p>Total Amount</p>
             <h2 class="text-warning">AED${data["total_price"]}</h2>
           </div>`;
   $(".subtotal").html(html);
@@ -260,6 +300,7 @@ function wishlist_requests(product_id, request) {
     success: (data) => {
       if (data["success"]) {
         get_products();
+        get_wish_list();
       }
     },
   });

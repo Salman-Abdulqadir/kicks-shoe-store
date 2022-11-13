@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- STYLES -->
     <link rel="stylesheet" href="../styles/login.css" />
-    <link rel="stylesheet" href="../styles/style.css?7" />
+    <link rel="stylesheet" href="../styles/style.css?8" />
     <link rel="stylesheet" href="../styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -51,7 +51,7 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- javascript script -->
-    <script src="../scripts/app.js?"></script>
+    <script src="../scripts/app.js?4"></script>
     <style>
       h3,
       h1 {
@@ -60,14 +60,13 @@
       div h1 {
         padding: 1rem;
         font-size: 1.5rem;
-        width: 80%;
         color: white;
         background: linear-gradient(90deg, #ffba00 0%, #ff6c00 100%);
       }
     </style>
     <title>shop</title>
   </head>
-  <body onload="get_cart();">
+  <body onload="get_cart();get_wish_list();">
     <header>
       <nav class="flex">
         <a href="#"
@@ -80,7 +79,7 @@
           <li>
             <a href="./cart.html">
               <i class="fa-solid fa-cart-shopping">
-                <span class="badge bg-warning" id="cart_count">0</span></i
+                <span class="badge bg-dark" id="cart_count">0</span></i
               >
             </a>
           </li>
@@ -95,15 +94,18 @@
     </header>
     <main>
       <section class="third-section">
-        <div class="cart">
-          <div>
+        <div class="cart row">
+          <div class="cart-items col-md-7">
             <h1><i class="fa-solid fa-cart-shopping"></i> Your cart</h1>
             <div class="items"></div>
           </div>
-          <div class="subtotal"></div>
-        </div>
-        <div class="wish-list">
-          <h1>Wish list</h1>
+          <div class="col-md-5">
+            <div class="subtotal"></div>
+            <div>
+              <h1 class="title">Wish list <i class="fa fa-heart"></i></h1>
+              <div class="wish-list"></div>
+            </div>
+          </div>
         </div>
       </section>
     </main>

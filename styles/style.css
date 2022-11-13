@@ -10,6 +10,7 @@ body {
 img {
   width: 100%;
 }
+
 button,
 a,
 nav,
@@ -266,7 +267,6 @@ h4 span {
   align-items: flex-start;
 }
 .subtotal {
-  width: 70%;
   padding: 1rem;
 }
 .subtotal .bordered {
@@ -278,12 +278,12 @@ h4 span {
   margin-bottom: 4rem;
   border-top: 2px solid rgba(0, 0, 0, 0.147);
 }
-.items {
-  margin-right: 1rem;
+.cart-items {
+  width: 90%;
 }
 .item {
   display: flex;
-  width: 80%;
+  width: 90%;
   flex-wrap: wrap;
   align-items: center;
   border-bottom: 2px solid rgba(0, 0, 0, 0.147);
@@ -296,6 +296,26 @@ h4 span {
   flex: 1.5;
   height: 100%;
   margin-right: 1rem;
+}
+.title {
+  width: 100%;
+}
+.wish-item {
+  padding: 1rem;
+  margin: 3rem auto;
+  border-radius: 1rem;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.wish-item img {
+  width: 10rem;
+  object-fit: contain;
+}
+.wish-item div {
+  margin: 0rem 3rem;
 }
 .info {
   flex: 1;
