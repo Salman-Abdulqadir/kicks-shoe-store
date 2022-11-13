@@ -8,12 +8,10 @@ function get_user_info(location = "") {
     dataType: "json",
     data: { type: "get_user_info" },
     success: (data) => {
-      if (data["username"]) {
+      if (data["username"] && data["item_count"]) {
         $("#cart_count").html(data["item_count"]);
-
         let logged_in = `<button onclick="logout();" class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
         $("#login_btn").html(logged_in);
-        console.log("success");
       }
     },
   });
@@ -44,7 +42,9 @@ function display_wish_list(data) {
     let price = row["price"];
 
     html += `<div class="wish-item">
-              <img src="../${img_url}" alt="image_${product_id}" />
+              <div class="wish-list-img">
+                <img src="../${img_url}" alt="image_${product_id}" />
+              </div>
               <div>
                 <h4>${brand}</h4>
                 <p>${description}</p>
@@ -157,7 +157,7 @@ function get_products() {
     dataType: "json",
     data: { type: "get_products" },
     success: (data) => {
-      display_products(data);
+      if (data["success"]) display_products(data);
       get_user_info();
     },
   });
@@ -206,7 +206,7 @@ function subtotal_html(data) {
 
   // ADDING THE NUMBER OF ITEMS
   html += `<div class="flex bordered">
-            <h3>${cart_items.length} items</h3>
+            <h3>${data["total_quantity"]} items</h3>
             <p>price</p>
           </div>
           <div class="order">`;
@@ -216,28 +216,28 @@ function subtotal_html(data) {
     // reading the data from the current row
     let description = row["description"];
     let price = row["price"];
-    let quantity = row["quantity"];
+    let quantity = row["cart_item_quantity"];
 
-    html += `<div class="order-item flex">
-    <p>${quantity} X ${description}</p>
-    <p>AED ${quantity * price}</p>
-  </div>`;
+    html += ` <div class="order-item flex">
+                <p>${quantity} X ${description}</p>
+                <p>AED ${quantity * price}</p>
+              </div>`;
   }
-  html += `</div><div class="total-amount flex">
-            <p>Total Amount</p>
-            <h2 class="text-warning">AED${data["total_price"]}</h2>
-          </div>`;
+  html += ` </div><div class="total-amount flex">
+              <p>Total Amount</p>
+              <h4 class="text-warning">AED ${data["total_price"]}</h4>
+            </div>`;
   $(".subtotal").html(html);
 }
 
 //DELETE CART ITEM
-function delete_cart_item(product_id) {
+function delete_cart_item(product_id, request) {
   $.ajax({
     method: "POST",
     url: "../server/controller.php",
     dataType: "json",
     data: {
-      type: "delete_cart_item",
+      type: request,
       product_id,
     },
     success: (data) => {
@@ -262,25 +262,26 @@ function display_cart(data) {
     let description = row["description"];
     let price = row["price"];
     let img_url = row["img_url"];
+    let quantity = row["cart_item_quantity"];
 
     html += `<div class="item">
-        <div class="item-image flex-column">
-          <img src="../${img_url}" alt="image_${product_id}" />
-        </div>
-        <div class="info">
-          <h4>${brand}</h4>
-          <p>${description}</p>
-          <div class="product-quantity">
-            <button class="btn btn-outline-warning">-</button>
-            <input value="1" type="text" disabled />
-            <button class="btn btn-outline-warning">+</button>
-          </div>
-          <button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mt-4">
-            Delete <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </div>
-        <h3 id="price">AED${price}</h3>
-      </div>`;
+                <div class="item-image flex-column">
+                  <img src="../${img_url}" alt="image_${product_id}" />
+                </div>
+                <div class="info">
+                  <h4>${brand}</h4>
+                  <p>${description}</p>
+                  <div class="product-quantity">
+                    <button onclick="delete_cart_item(${product_id}, 'decrease_cart_item');" class="btn btn-outline-warning">-</button>
+                    <input value=${quantity} type="text" disabled />
+                    <button onclick="add_product(this);" product_id="${product_id}" class="btn btn-outline-warning">+</button>
+                  </div>
+                  <button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger mt-4">
+                    Delete <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <h3 id="price">AED${price}</h3>
+              </div>`;
   }
   subtotal_html(data);
   $(".items").html(html);
@@ -328,14 +329,20 @@ function display_products(data) {
     html += `
     <div class="product">
         <div class="product-img">`;
-    if (is_wish) {
-      html += `<button onclick="wishlist_requests(${product_id}, 'remove_wishlist_item')" class="add_to_favorite">
+    if (!is_added) {
+      if (is_wish) {
+        html += `<button onclick="wishlist_requests(${product_id}, 'remove_wishlist_item')" class="add_to_favorite">
                 <i style="color:tomato" class="fa-solid fa-heart"></i>
-              </button>;`;
-    } else {
-      html += `<button onclick="wishlist_requests(${product_id}, 'add_to_wishlist')" class="add_to_favorite">
+              </button>`;
+      } else {
+        html += `<button onclick="wishlist_requests(${product_id}, 'add_to_wishlist')" class="add_to_favorite">
                 <i class="fa-solid fa-heart"></i>
-              </button>;`;
+              </button>`;
+      }
+    } else {
+      html += `<button disabled class="add_to_favorite disabled">
+                <i class="fa-solid fa-heart"></i>
+              </button>`;
     }
 
     html += `
@@ -344,17 +351,28 @@ function display_products(data) {
         <div class="product-info">
             <h3>${brand}</h3>
             <p>${description}</p>
-            <h4>${price}AED <span>${
-      quantity < 5 ? "only " + quantity + " left!" : " "
-    }</span></h4> </div>`;
+            <h4>${price}AED`;
+    if (quantity > 0) {
+      html += `<span style="color: ${quantity < 5 ? "tomato" : "lightgray"}">${
+        quantity < 5 ? "only " + quantity + " left!" : "In Stock"
+      }</span></h4> </div>`;
+    } else {
+      html += "</h4></div>";
+    }
 
     // IF THE PRODUCT IS NOT ADD, ADD A BUTTON THAT ALLOWS THE USER TO ADD IT
     if (!is_added)
-      html += `<button onclick="add_product(this);" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button></div>`;
-    else
-      html += `<button type="button" class="btn btn-warning" disabled data-bs-toggle="button" autocomplete="off">added to cart <i class="fa-solid fa-check"></i></button><button onclick="delete_cart_item(${product_id})" class="btn btn-outline-danger mx-2">
-      <i class="fa fa-trash" aria-hidden="true"></i>
-    </button></div>`;
+      html += `<button onclick="add_product(this);wishlist_requests(${product_id}, 'remove_wishlist_item')" product_id="${product_id}" class=" btn btn-outline-dark add_to_cart">Add to cart  <i class="fa-solid fa-cart-shopping"></i></button></div>`;
+    else {
+      if (quantity == 0)
+        html += `<button type="button" class="btn btn-dark" disabled data-bs-toggle="button" autocomplete="off"> out of stock
+        </button></div>`;
+      else {
+        html += `<button type="button" class="btn btn-warning" disabled data-bs-toggle="button" autocomplete="off">added <i class="fa-solid fa-check"></i></button><button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger mx-2">
+        Remove from cart <i class="fa fa-trash" aria-hidden="true"></i>
+      </button></div>`;
+      }
+    }
   }
   $(".latest-products").html(html);
   console.log();

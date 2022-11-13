@@ -226,11 +226,19 @@ h4 span {
   background: white;
   color: grey;
 }
+
+.disabled {
+  color: rgb(255, 218, 150);
+  background-color: rgb(255, 218, 150);
+}
 .add_to_cart:hover {
   color: rgb(255, 218, 150);
 }
 .add_to_favorite:hover {
   color: rgb(255, 150, 150);
+}
+.disabled:hover {
+  color: rgb(255, 218, 150);
 }
 /* FOURTH SECTION */
 .fourth-section {
@@ -297,6 +305,7 @@ h4 span {
   height: 100%;
   margin-right: 1rem;
 }
+
 .title {
   width: 100%;
 }
@@ -310,10 +319,14 @@ h4 span {
   justify-content: flex-start;
   align-items: center;
 }
-.wish-item img {
+.wish-list-img {
+  flex: 0.8;
   width: 10rem;
-  object-fit: contain;
 }
+.wish-list-img img {
+  width: 100%;
+}
+
 .wish-item div {
   margin: 0rem 3rem;
 }

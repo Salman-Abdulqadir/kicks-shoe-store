@@ -19,7 +19,7 @@
     // $_POST["gender"]
     // $_POST["address"]
 
-    // $request_type = "add_to_wishlist";
+    // $request_type = "delete_cart_item";
     // $_POST["product_id"] = '1';
     switch($request_type){
         case "get_products":
@@ -39,6 +39,9 @@
             break;
         case "get_cart":
             $final_result = get_cart($connection);
+            break;
+        case "decrease_cart_item":
+            $final_result = decrease_cart_item($connection);
             break;
         case "delete_cart_item":
             $final_result = delete_cart_item($connection);
@@ -130,20 +133,53 @@
         return array("success"=>true); 
     }
 
+        //DELETING CART ITEM FROM THE CART
+        function delete_cart_item($connection){
+            if(isset($_SESSION['user_id'])){
+                $user_id = $_SESSION["user_id"];
+                $product_id = $_POST["product_id"];
+    
+                $query = "UPDATE product SET Quantity = Quantity + (SELECT Item_quantity FROM cart_item WHERE Product_id = '$product_id' AND User_id = '$user_id') WHERE Product_id = '$product_id'; DELETE FROM cart_item WHERE cart_item.User_id = '$user_id' AND cart_item.Product_id = '$product_id'";
+                $result = mysqli_multi_query($connection, $query);
+                if(!$result){
+                    return array("success"=>false);
+                }
+                return array("success"=>true);
+            }
+            else{
+                return array("success"=>false);
+            }
+        }
+
     //DELETING A CART ITEM FROM THE CART
-    function delete_cart_item($connection){
+    function decrease_cart_item($connection){
         if(isset($_SESSION['user_id'])){
             $user_id = $_SESSION["user_id"];
             $product_id = $_POST["product_id"];
 
-            $query = "DELETE FROM cart_item WHERE cart_item.User_id = '$user_id' AND cart_item.Product_id = '$product_id'";
-            $result = mysqli_query($connection, $query);
-            if(!$result){
+            $cart_item_query = "SELECT Item_quantity AS quantity FROM cart_item WHERE User_id = $user_id AND Product_id = $product_id";
+            $cart_item_result = mysqli_query($connection, $cart_item_query);
+            if (!$cart_item_result) {
                 return array("success"=>false);
             }
-            return array('success' => true);
-        }
-        else{
+            $row = mysqli_fetch_array($cart_item_result);
+            $quantity = $row["quantity"];
+            if ($quantity == 1) {
+                $query = "DELETE FROM cart_item WHERE cart_item.User_id = '$user_id' AND cart_item.Product_id = '$product_id'; UPDATE product SET Quantity = Quantity + 1 WHERE Product_id = '$product_id'";
+                $result = mysqli_multi_query($connection, $query);
+                if(!$result){
+                    return array("success"=>false);
+                }
+                return array("success"=>true);
+            } else {
+                $query = "UPDATE cart_item SET Item_quantity = Item_quantity - 1 WHERE User_id = $user_id AND Product_id = $product_id; UPDATE product SET Quantity = Quantity + 1 WHERE Product_id = '$product_id'";
+                $result = mysqli_multi_query($connection, $query);
+                if(!$result){
+                    return array("success"=>false);
+                }
+                return array("success"=>true);
+            }
+        } else {
             return array("success"=>false);
         }
     }
@@ -192,9 +228,8 @@
     }
     //GETTING THE CART ITEMS OF THE USER
     function get_cart($connection){
-        $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "";
 
-
+        $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : "";
         $query = "SELECT * FROM cart_item INNER JOIN product ON cart_item.Product_id = product.Product_id WHERE cart_item.User_id = $user_id";
         $result = mysqli_query($connection, $query);
 
@@ -203,33 +238,57 @@
         
         $data = array();
         $total_price = 0;
+        $total_cart_items = 0;
 
         //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
         while($row = mysqli_fetch_array($result)){
             $product_id = $row["Product_id"];
             $brand = $row["Brand"];
             $description = $row["Description"];
-            $quantity = $row["Item_quantity"];
-            $price = $row["Price"];
+            $cart_item_quantity = $row["Item_quantity"];
+            $product_quantity = $row["Quantity"];
+            $price = $row["Price"]*$cart_item_quantity;
             $img_url = $row["Image_url"];
             $total_price += $price;
+            $total_cart_items += $cart_item_quantity;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url, "quantity" => $quantity);
+            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "img_url"=>$img_url, "cart_item_quantity"=>$cart_item_quantity, "product_quantity"=>$product_quantity);
         } 
-        return array("cart_items" => $data, "total_price" => $total_price);  
+        return array("cart_items" => $data, "total_price" => $total_price, "total_quantity" => $total_cart_items);
     }
     
-    //ADDING A PRODUCT AS A CART ITEM FOR THE USER
-    function add_product($connection){
+     //ADDING A PRODUCT AS A CART ITEM FOR THE USER
+     function add_product($connection){
         if(isset($_SESSION['user_id'])){
             $product_id = $_POST["product_id"];
             $user_id = $_SESSION['user_id'];
-            $query = "INSERT INTO cart_item (User_id, Product_id, Item_quantity) VALUES($user_id, $product_id, 1)";
-            $result = mysqli_query($connection, $query);
-            if(!$result)
-                return array("success" => false, "message"=>"failed to add product");
-            return array("success" => true);
+            
+            $product_query = "SELECT Quantity AS quantity FROM product WHERE Product_id = $product_id";
+            $product_result = mysqli_query($connection, $product_query);
+            if (!$product_result) {
+                return array("success"=>false);
+            }
+            $row = mysqli_fetch_array($product_result);
+            $quantity = $row["quantity"];
+
+            if ($quantity >= 1) {
+                if (is_added($connection, $product_id, "cart_item")) {
+                    $query = "UPDATE cart_item SET Item_quantity=Item_quantity+1 WHERE User_id=$user_id AND Product_id=$product_id; UPDATE product SET Quantity = Quantity - 1 WHERE Product_id = '$product_id'";
+                    $result = mysqli_multi_query($connection, $query);
+                    if(!$result)
+                        return array("success" => false, "message"=>"failed to add product");
+                    return array("success" => true);
+                } else {
+                    $query = "INSERT INTO cart_item (User_id, Product_id, Item_quantity) VALUES($user_id, $product_id, 1); UPDATE product SET Quantity = Quantity - 1 WHERE Product_id = '$product_id'";
+                    $result = mysqli_multi_query($connection, $query);
+                    if(!$result)
+                        return array("success" => false, "message"=>"failed to add product");
+                    return array("success" => true);
+                }
+            } else {
+                return array("success" => false);
+            }
         }
         return array("success" => false);
     }
@@ -252,23 +311,28 @@
     function get_user_info($connection){
         if(isset($_SESSION["user_id"])){
             $user_id = $_SESSION["user_id"];
-            $query = "SELECT Users.FirstName, count(*) AS count FROM cart_item INNER JOIN Users ON cart_item.User_id =  Users.ID WHERE User_id = '$user_id'";
+            $query = "SELECT Users.FirstName, cart_item.Item_quantity AS quantity FROM cart_item INNER JOIN Users ON cart_item.User_id =  Users.ID WHERE User_id = '$user_id'";
             $result = mysqli_query($connection, $query);
+            $item_count = 0;
+            $username = "";
 
             if($result){
-                $data = mysqli_fetch_array($result);
-                if($data["count"] == 0){
-                    $query_username = "SELECT FirstName AS firstname FROM Users WHERE ID = '$user_id'";
-                    $username_result = mysqli_query($connection, $query_username);
-                    $username = mysqli_fetch_array($username_result)["firstname"];
-                    return array("username" => $username);
+                while($data = mysqli_fetch_array($result)) {
+                    $item_count += $data["quantity"];
+                    $username = $data["FirstName"];
                 }
-                return array("username" => $data["FirstName"], "item_count" => $data["count"]);
+                if($item_count == 0){
+                    $query_username = "SELECT FirstName AS fname FROM Users WHERE ID = '$user_id'";
+                    $username_result = mysqli_query($connection, $query_username);
+                    $username = mysqli_fetch_array($username_result)["fname"];
+                    return array("username" => $username, "item_count"=>$item_count);
+                }
+                return array("username" => $username, "item_count" => $item_count);
             }
 
                 
         }
-        return array("user" => false, "item_count" => false);
+        return array("username" => false);
     }
 
     // CHECKING IS PRODUCT IS ADDED TO USERS CART
@@ -318,7 +382,7 @@
             //ADDING THE INFO THE DATA ARRAY
             $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item);
         }
-        return array($data, "cart_count" => $cart_count);
+        return array($data, "cart_count" => $cart_count, "success" => true);
     }
 
 
