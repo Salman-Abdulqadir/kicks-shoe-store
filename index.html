@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- STYLES -->
-    <link rel="stylesheet" href="./styles/style.css?11" />
+    <link rel="stylesheet" href="./styles/style.css?15" />
     <link rel="stylesheet" href="./styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -52,20 +52,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- javascript script -->
-    <script src="scripts/app.js?2"></script>
+    <script src="scripts/app.js?3"></script>
 
     <title>Home</title>
   </head>
   <body onload="get_user_info('home');">
     <header>
       <nav class="flex">
-        <a href="#"><img src="./images/logo.webp" alt="logo" class="logo" /></a>
+        <a href="#"><img src="./images/logo.png" alt="logo" class="logo" /></a>
         <ul class="links flex">
           <li><a href="./index.html">Home</a></li>
           <li><a href="pages/shop.html">Shop</a></li>
           <li><a href="pages/contacts.html">Contact</a></li>
           <li>
-            <a href="pages/cart.html">
+            <a href="pages/cart.php">
               <i class="fa-solid fa-cart-shopping">
                 <span class="badge bg-dark" id="cart_count">0</span></i
               >
@@ -90,9 +90,9 @@
             excepturi exercitationem qui dicta recusandae. Architecto vero
           </p>
           <div class="add-to-bag">
-            <button class="btn btn-outline-warning">
+            <button class="shop-btn">
               <a href="pages/shop.html"
-                ><i class="text-dark fa-solid fa-cart-shopping"></i
+                ><i class="text-light fa-solid fa-cart-shopping"></i
               ></a>
             </button>
             <span>Go to shop</span>
@@ -143,23 +143,24 @@
             <img src="./images/shoe-gallery-pic5.jpg" alt="gallery-img5" />
           </div>
         </div>
-      </section>
-      <section class="fourth-section flex">
-        <div class="title"><h2>Limited Deals</h2></div>
-        <div class="deal-info flex-column">
-          <h2>Exclusive Hot Deals Ends Soon</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. At, id!
-          </p>
-          <button class="orange-btn">Shop Now</button>
-          <img src="./images/top_deals.jpg" class="deal-img" alt="pic" />
+        <div class="title">
+          <h2>Our Nike Collection</h2>
         </div>
-        <div class="deal flex-column">
-          <img src="./images/main-nike-pic.png" alt="offer" />
-          <h4>150AED <span>800AED</span></h4>
-          <div class="add-to-bag">
-            <button><i class="fa-solid fa-cart-shopping"></i></button>
-            <span>Add to Bag</span>
+        <div class="shoe-gallery">
+          <div class="grid-pic grid-pic1">
+            <img src="./images/n1.avif" alt="gallery-img1" />
+          </div>
+          <div class="grid-pic grid-pic2">
+            <img src="./images/n5.avif" alt="gallery-img2" />
+          </div>
+          <div class="grid-pic grid-pic3">
+            <img src="./images/n3.avif" alt="gallery-img3" />
+          </div>
+          <div class="grid-pic grid-pic4">
+            <img src="./images/n4.avif" alt="gallery-img4" />
+          </div>
+          <div class="grid-pic grid-pic5">
+            <img src="./images/n2.avif" alt="gallery-img5" />
           </div>
         </div>
       </section>
@@ -240,7 +241,7 @@
         >
           <p>
             Copyright ©2022 All rights reserved |
-            <a href="index.html" target="_blank">ShoeSnatch</a>
+            <a href="index.html" target="_blank">Kicks</a>
           </p>
         </div>
       </div>

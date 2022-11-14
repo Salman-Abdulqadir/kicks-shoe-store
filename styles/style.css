@@ -80,7 +80,9 @@ nav {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   z-index: 5;
 }
-
+nav a img {
+  width: 10rem;
+}
 .links {
   width: 50%;
   list-style: none;
@@ -102,6 +104,16 @@ nav {
   margin: auto;
   min-height: 80vh;
 }
+.shop-btn {
+  border-radius: 50%;
+  border: none;
+  padding: 1.3rem !important;
+  background: linear-gradient(90deg, #ffba00 0%, #ff6c00 100%);
+}
+.shop-btn a {
+  font-size: 1rem !important;
+}
+
 .info,
 .main-image {
   flex: 1 30rem;

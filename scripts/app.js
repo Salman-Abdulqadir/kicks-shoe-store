@@ -10,7 +10,7 @@ function get_user_info(location = "") {
     success: (data) => {
       if (data["username"] && data["item_count"]) {
         $("#cart_count").html(data["item_count"]);
-        let logged_in = `<button onclick="logout();" class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
+        let logged_in = `<button onclick="logout(location);" class="btn btn-outline-dark"><i class="fas fa-user-circle"></i> ${data["username"]} | logout</button>`;
         $("#login_btn").html(logged_in);
       }
     },
@@ -77,14 +77,14 @@ function login() {
 }
 
 //LOGOUT FUNCTION
-function logout() {
+function logout(location = "") {
   $.ajax({
     method: "POST",
-    url: "../server/controller.php",
+    url: location ? "server/controller.php" : "../server/controller.php",
     dataType: "json",
     data: { type: "logout" },
     success: function (data) {
-      window.location.href = "../index.html";
+      window.location.href = location ? "index.html" : "../index.html";
     },
   });
 }
