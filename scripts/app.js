@@ -1,5 +1,40 @@
 let password_match = false;
 
+//ADDING A PRODUCT TOT HE PRODUCT TABLE
+function add_product_item() {
+  let brand = $("#brand").val();
+  let price = $("#price").val();
+  let quantity = $("#quantity").val();
+  let img_url = $("#img_url").val();
+  let description = $("#description").val();
+
+  //SENDING AN AJAX REQUEST
+  $.ajax({
+    method: "POST",
+    url: "../server/controller.php",
+    dataType: "json",
+    data: {
+      type: "add_product_item",
+      brand,
+      price,
+      quantity,
+      img_url,
+      description,
+    },
+    success: (data) => {
+      if (data["success"]) {
+        alert("yay!! you did it");
+        $("#brand").val("");
+        $("#price").val("");
+        $("#quantity").val("");
+        $("#img_url").val("");
+        $("#description").val("");
+      } else {
+        alert("failed");
+      }
+    },
+  });
+}
 //GETTING THE USERS INFO IF THEIR LOGGED IN
 function get_user_info(location = "") {
   $.ajax({
@@ -151,13 +186,35 @@ function compare_passwords() {
 
 //GETTING PRODUCTS WHEN THE STORE PAGE LOADS
 function get_products() {
+  let category = $("#category-filter").val();
+  let brand = $("#brands-filter").val();
+  let price = $("#price-filter").val();
+  let search_input = $("#search-product-input").val();
+  let sort_price = $("#sort_price").val();
   $.ajax({
     method: "POST",
     url: "../server/controller.php",
     dataType: "json",
-    data: { type: "get_products" },
+    data: {
+      type: "get_products",
+      category,
+      brand,
+      price,
+      search_input,
+      sort_price,
+    },
     success: (data) => {
-      if (data["success"]) display_products(data);
+      if (data["success"]) {
+        let filters_array = [category, brand, price, search_input];
+        let filters = "";
+        filters += filters_array.filter((element) => {
+          if (element) {
+            return element + "->";
+          }
+        });
+        display_products(data, filters);
+      }
+
       get_user_info();
     },
   });
@@ -259,7 +316,7 @@ function display_cart(data) {
     // reading the data from the current row
     let product_id = row["product_id"];
     let brand = row["brand"];
-    let description = row["description"];
+    let category = row["category"];
     let price = row["price"];
     let img_url = row["img_url"];
     let quantity = row["cart_item_quantity"];
@@ -270,17 +327,31 @@ function display_cart(data) {
                 </div>
                 <div class="info">
                   <h4>${brand}</h4>
-                  <p>${description}</p>
-                  <div class="product-quantity">
-                    <button onclick="delete_cart_item(${product_id}, 'decrease_cart_item');" class="btn btn-outline-warning">-</button>
-                    <input value=${quantity} type="text" disabled />
-                    <button onclick="add_product(this);" product_id="${product_id}" class="btn btn-outline-warning">+</button>
+                  <div class="flex">
+                    <p>Category</p>
+                    <p>${category}</p>
                   </div>
-                  <button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger mt-4">
-                    Delete <i class="fa fa-trash" aria-hidden="true"></i>
-                  </button>
+                  <div class="flex">
+                    <p>Quantity</p>
+                    <div class="product-quantity">
+                      <button onclick="delete_cart_item(${product_id}, 'decrease_cart_item');" >-</button>
+                      <input value=${quantity} type="text" disabled />
+                      <button onclick="add_product(this);" product_id="${product_id}">+</button>
+                    </div>
+                  </div>
+                  <div class = "flex">
+                    <h3 id="price">AED${price}</h3>
+                    <div>
+                      <button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </button>
+                      <button onclick="wishlist_requests(${product_id},'add_to_wishlist');delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-dark">
+                        Wishlist <i class="fa fa-heart"></i>
+                      </button>
+                    </div>
+                    
+                  </div>
                 </div>
-                <h3 id="price">AED${price}</h3>
               </div>`;
   }
   subtotal_html(data);
@@ -310,7 +381,7 @@ function wishlist_requests(product_id, request) {
 // REMOVING WISHLIST ITEM
 
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE
-function display_products(data) {
+function display_products(data, filters) {
   let html = "";
   let products = data[0];
   for (let index in products) {
@@ -374,6 +445,7 @@ function display_products(data) {
       }
     }
   }
+  $("#filter-result").html(filters);
   $(".latest-products").html(html);
   console.log();
 }

@@ -10,17 +10,21 @@
     $request_type = isset($_POST["type"]) ? $_POST["type"] : "";
     $final_result = array();
 
-    //SIMULATION
-    // $_POST["first_name"]
-    // $_POST["last_name"]
-    // $_POST["email"]
-    // $_POST["password"]
-    // $_POST["date_of_birth"]
-    // $_POST["gender"]
-    // $_POST["address"]
+    // //SIMULATION
+    // $_POST["brand"] = "Gucci";
+    // $_POST["quantity"] = 20;
+    // $_POST["price"] = 200;
+    // $_POST["description"] = "women's shoe";
+    // $_POST["img_url"] = "images/product11.png";
+    // // $_POST["gender"]
+    // // $_POST["address"]
 
-    // $request_type = "delete_cart_item";
-    // $_POST["product_id"] = '1';
+    // $request_type = "get_products";
+    // $_POST['brand'] = "Nike";
+    // $_POST['category'] = "Men";
+    // $_POST['price'] = "";
+    // $_POST['search_input'] = "Kyrie";
+    
     switch($request_type){
         case "get_products":
             $final_result = get_products($connection);
@@ -58,10 +62,29 @@
         case "get_wish_list":
             $final_result = get_wish_list($connection);
             break;
+        case "add_product_item":
+            $final_result = add_product_item($connection);
+            break;
 
     }
     echo json_encode($final_result);
 
+    //ADDING A PRODUCT TO THE PRODUCT TABLE
+    function add_product_item($connection){
+        $brand = $_POST["brand"];
+        $price = $_POST["price"];
+        $quantity = $_POST["quantity"];
+        $img_url = $_POST["img_url"];
+        $description = $_POST["description"];
+
+        $query = "INSERT INTO product (Brand, Description, Price, Quantity, Image_url) VALUES ('$brand', '$description', '$price', '$quantity', '$img_url')";
+        $result = mysqli_query($connection, $query);
+
+
+        if(!$result)
+            return array("success" => false);
+        return array("success" => true);
+    }
     //LOGIN FUNCTION 
     function login($connection) {
         if (isset($_POST["username"]) && isset($_POST["password"])) {
@@ -220,9 +243,10 @@
             $description = $row["Description"];
             $price = $row["Price"];
             $img_url = $row["Image_url"];
+            $category = $row["Category"];
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url);
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price, "img_url" => $img_url, "category" => $category);
         } 
         return $data;  
     }
@@ -249,11 +273,12 @@
             $product_quantity = $row["Quantity"];
             $price = $row["Price"]*$cart_item_quantity;
             $img_url = $row["Image_url"];
+            $category = $row["Category"];
             $total_price += $price;
             $total_cart_items += $cart_item_quantity;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "img_url"=>$img_url, "cart_item_quantity"=>$cart_item_quantity, "product_quantity"=>$product_quantity);
+            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "img_url"=>$img_url, "cart_item_quantity"=>$cart_item_quantity, "product_quantity"=>$product_quantity, "category" => $category);
         } 
         return array("cart_items" => $data, "total_price" => $total_price, "total_quantity" => $total_cart_items);
     }
@@ -354,9 +379,36 @@
     }
     // GETTING ALL THE PRODUCTS
     function get_products ($connection){
+        //FILTERS
+        $search_input = isset($_POST["search_input"]) ? $_POST["search_input"] : "";
+        $price_filter = isset($_POST["price"])? $_POST["price"]: "";
+        $brand_filter = isset($_POST["brand"]) ? $_POST["brand"] : "";
+        $category_filter= isset($_POST["category"]) ? $_POST["category"] : "";
+        $sort_price = isset($_POST["sort_price"]) ? $_POST["sort_price"] : 'DESC';
 
-        //QUERY THAT WILL SELECT ALL THE PRODUCTS FROM THE DB
-        $query = "SELECT * FROM product";
+
+        //FILTER QUERIES
+        $brand_query = $_POST["brand"] != "" ? "Brand = '$brand_filter'" : true;
+        $category_query = $_POST["category"] != "" ? "Category = '$category_filter'" : true;
+        $price_query = true;
+        if($_POST["price"] != ""){
+            switch($_POST["price"]){
+                case "low":
+                    $price_query = "Price > 0 AND price < 100";
+                    break;
+                case "medium":
+                    $price_query = "Price >= 100 AND price < 500";
+                    break;
+                case "high":
+                    $price_query = "Price >= 500";
+                    break;
+            }
+        }
+        
+        
+        // QUERY THAT WILL SELECT ALL THE PRODUCTS FROM THE DB
+        $query = "SELECT * FROM product WHERE $brand_query AND $category_query AND $price_query AND Description LIKE '%$search_input%' ORDER BY Price $sort_price";
+
         $result = mysqli_query($connection, $query);
 
         //IF THE RESULTS HAVE ERROR, END THE CONNECTION WITH THE DB

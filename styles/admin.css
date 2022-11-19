@@ -20,7 +20,7 @@ main {
   gap: 2rem;
   flex: 1;
   min-height: 100vh;
-  background-color: rgba(255, 218, 150, 0.29);
+  background-color: rgb(255, 228, 178);
 }
 
 .option h2 {
@@ -46,6 +46,10 @@ main {
   flex: 3;
   padding: 2rem;
   min-height: 100vh;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
 }
 
 /* CONTENT SECTION */
@@ -53,6 +57,51 @@ main {
   font-size: 2.5rem;
   font-weight: 300;
   text-align: center;
+}
+
+/* ADD PRODUCT FORM*/
+.add-form {
+  padding: 2rem;
+  width: fit-content;
+  margin: 4rem auto;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.add-form input,
+.add-form select,
+.add-form button,
+.add-form textarea {
+  width: 100%;
+  font-family: "poppins", sans-serif;
+  font-size: 1rem;
+  padding: 1rem;
+}
+
+.add-form button {
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.5s ease;
+  color: black;
+  border: 1px solid black;
+  background-color: white;
+}
+.add-form button:hover {
+  background-color: black;
+  color: white;
+}
+#discard-product-btn {
+  color: tomato;
+  border: 1px solid tomato;
+  background-color: white;
+}
+#discard-product-btn:hover {
+  background-color: tomato;
+  color: white;
+}
+.form-row {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0rem;
 }
 
 @media screen and (max-width: 950px) {

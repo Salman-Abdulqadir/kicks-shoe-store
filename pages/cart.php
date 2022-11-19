@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- STYLES -->
     <link rel="stylesheet" href="../styles/login.css" />
-    <link rel="stylesheet" href="../styles/style.css?4" />
+    <link rel="stylesheet" href="../styles/style.css?7" />
     <link rel="stylesheet" href="../styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -55,7 +55,7 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- javascript script -->
-    <script src="../scripts/app.js?4"></script>
+    <script src="../scripts/app.js?5"></script>
     <style>
       h3,
       h1 {

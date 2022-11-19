@@ -34,10 +34,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- javascript script -->
-    <script src="../scripts/app.js?4"></script>
+    <script src="../scripts/app.js?8"></script>
 
     <!-- STYLE -->
-    <link rel="stylesheet" href="../styles/admin.css?2" />
+    <link rel="stylesheet" href="../styles/admin.css?3" />
 
     <title>Admin Dashboard</title>
   </head>
@@ -91,12 +91,12 @@
             </div>
             <textarea
               id="description"
-              cols="30"
-              rows="10"
+              cols="20"
+              rows="5"
               placeholder="Enter the description of the product"
             ></textarea>
             <div class="form-row">
-              <button id="add-product-btn">
+              <button onclick="add_product_item();" id="add-product-btn">
                 <i class="fa-solid fa-plus"></i> Add Product
               </button>
               <button id="discard-product-btn">

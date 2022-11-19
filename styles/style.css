@@ -10,7 +10,10 @@ body {
 img {
   width: 100%;
 }
-
+input,
+select {
+  font-family: "Poppins", sans-serif;
+}
 button,
 a,
 nav,
@@ -39,6 +42,7 @@ p {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 2rem;
 }
 .flex-column {
   display: flex;
@@ -190,7 +194,8 @@ nav a img {
   grid-area: pic5;
 }
 /* THIRD SECTION */
-.third-section {
+.third-section,
+.product-section {
   width: 90%;
   margin: 5rem auto;
   min-height: 80vh;
@@ -202,9 +207,78 @@ nav a img {
   color: black;
   border-bottom: 5px solid orange;
 }
+
+/* shop styling */
+header.title {
+  padding: 0% 5%;
+  z-index: 1;
+}
+
+.intro-text h1 {
+  color: white;
+  font-size: 5rem;
+}
+.intro-text h3 {
+  color: white;
+}
+
+.product-section {
+  display: flex;
+  gap: 2rem;
+}
+.products {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.filters {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.filters select {
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid orange;
+  margin-left: 1rem;
+}
+.filters h3 {
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: rgb(255, 218, 150);
+}
+.search-product input,
+.search-product button,
+#sorting-option {
+  outline: none;
+  padding: 10px;
+  border: none;
+  background-color: white;
+}
+.search-product input {
+  width: 100%;
+}
+.search-product {
+  display: flex;
+  padding: 0px 10px;
+  justify-content: space-between;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+#sorting-option {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-left: 2rem;
+}
+
 .latest-products {
+  height: 100vh;
+  overflow-y: scroll;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   row-gap: 2rem;
   column-gap: 2rem;
 }
@@ -232,11 +306,10 @@ h4 span {
 }
 .add_to_favorite {
   float: right;
-  padding: 10px;
-  border-radius: 50%;
+  font-size: 1.5rem;
   border: none;
-  background: white;
-  color: grey;
+  background: transparent;
+  color: white;
 }
 
 .disabled {
@@ -313,7 +386,7 @@ h4 span {
   width: 5rem !important;
 }
 .item-image {
-  flex: 1.5;
+  flex: 1;
   height: 100%;
   margin-right: 1rem;
 }
@@ -343,21 +416,44 @@ h4 span {
   margin: 0rem 3rem;
 }
 .info {
-  flex: 1;
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.flex p {
+  margin: 0;
 }
 #price {
-  font-size: 1.5rem;
-  flex: 1;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.6);
 }
 
+.product-quantity {
+  width: fit-content;
+  display: flex;
+  gap: 5px;
+  border: 1px solid rgb(255, 218, 150);
+}
+.product-quantity button,
+.product-quantity input {
+  padding: 10px;
+  border: none;
+  background-color: white;
+}
 .product-quantity button {
-  border-radius: 0;
+  padding: 10px 15px;
+  color: orange;
+}
+.product-quantity button:hover {
+  background-color: orange;
+  color: white;
 }
 .product-quantity input {
-  width: 50px;
-  display: inline;
+  width: 2rem;
   text-align: center;
 }
+
 @keyframes linkFade {
   from {
     opacity: 0;
