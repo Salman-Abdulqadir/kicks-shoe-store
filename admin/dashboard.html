@@ -34,12 +34,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- javascript script -->
-    <script src="../scripts/app.js?8"></script>
+    <script src="../scripts/app.js?13"></script>
 
     <!-- STYLE -->
     <link rel="stylesheet" href="../styles/admin.css?3" />
 
     <title>Admin Dashboard</title>
+    <style>
+      .success-message {
+        padding: 1rem;
+        background-color: lightgreen;
+        border-radius: 5px;
+        transform: translateY(-200%);
+      }
+      @keyframes show-message {
+        0% {
+          opacity: 1;
+          transform: translateY(-200%);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-200%);
+        }
+      }
+    </style>
   </head>
   <body>
     <main>
@@ -56,22 +78,22 @@
         <div class="option">
           <h2>Manage Users</h2>
           <ul class="products">
-            <li><i class="fa-solid fa-history"></i> View Order History</li>
             <li><i class="fa-solid fa-trash"></i> Delete User Accounts</li>
           </ul>
         </div>
       </section>
       <section class="content">
         <div class="add-product">
+          <h2 class="success-message"></h2>
           <h2><i class="fa-solid fa-plus"></i> Add products</h2>
           <div class="add-form">
             <div class="form-row">
               <input type="text" id="brand" placeholder="Enter the brand" />
               <select id="category">
                 <option hidden selected value="">Choose Category</option>
-                <option value="men">Men</option>
-                <option value="women">Women</option>
-                <option value="kids">Kids</option>
+                <option value="Men">Men</option>
+                <option value="Women">Women</option>
+                <option value="Kids">Kids</option>
               </select>
             </div>
             <div class="form-row">

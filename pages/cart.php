@@ -1,5 +1,8 @@
 <?php
-
+  session_start();
+  if(!$_SESSION["user_id"]){
+    header("location:login.html");
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- STYLES -->
     <link rel="stylesheet" href="../styles/login.css" />
-    <link rel="stylesheet" href="../styles/style.css?7" />
+    <link rel="stylesheet" href="../styles/style.css?1" />
     <link rel="stylesheet" href="../styles/footer.css" />
 
     <!-- HEADER ICON -->
@@ -55,10 +58,10 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- javascript script -->
-    <script src="../scripts/app.js?5"></script>
+    <script src="../scripts/app.js?14"></script>
     <style>
       h3,
-      h1 {
+      h1,h2,h5 {
         color: black;
       }
       div h1 {
@@ -81,7 +84,7 @@
           <li><a href="./shop.html">Shop</a></li>
           <li><a href="./contacts.html">Contact</a></li>
           <li>
-            <a href="./cart.html">
+            <a href="./cart.php">
               <i class="fa-solid fa-cart-shopping">
                 <span class="badge bg-dark" id="cart_count">0</span></i
               >
@@ -98,12 +101,17 @@
     </header>
     <main>
       <section class="third-section">
-        <div class="cart row">
-          <div class="cart-items col-md-7">
-            <h1><i class="fa-solid fa-cart-shopping"></i> Your cart</h1>
+        <div class="cart">
+          <div class="cart-items">
+            <h3 class="cart-title"><i class="fa-solid fa-cart-shopping"></i> Your cart</h3>
             <div class="items"></div>
           </div>
-          <div class="col-md-5">
+          <div class="order">
+            <div class="coupon">
+              <h3>Have a voucher?</h3>
+              <input type="text" placeholder="Enter your code here">
+              <button class="btn btn-warning">Redeem</button>
+            </div>
             <div class="subtotal"></div>
             <div>
               <h1 class="title">Wish list <i class="fa fa-heart"></i></h1>

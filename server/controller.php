@@ -19,11 +19,13 @@
     // // $_POST["gender"]
     // // $_POST["address"]
 
-    // $request_type = "get_products";
+    // $request_type = "add_product_item";
     // $_POST['brand'] = "Nike";
     // $_POST['category'] = "Men";
-    // $_POST['price'] = "";
-    // $_POST['search_input'] = "Kyrie";
+    // $_POST['price'] = 120;
+    // $_POST['description'] = "fajksl;dfj";
+    // $_POST['img_url'] = "sdjfak;sdjf";
+    // $_POST['quantity'] = 24;
     
     switch($request_type){
         case "get_products":
@@ -76,8 +78,9 @@
         $quantity = $_POST["quantity"];
         $img_url = $_POST["img_url"];
         $description = $_POST["description"];
+        $category = $_POST["category"];
 
-        $query = "INSERT INTO product (Brand, Description, Price, Quantity, Image_url) VALUES ('$brand', '$description', '$price', '$quantity', '$img_url')";
+        $query = "INSERT INTO product (Brand, Description, Price, Quantity, Image_url, Category, Rating) VALUES ('$brand', '$description', $price, $quantity, '$img_url', '$category', 0)";
         $result = mysqli_query($connection, $query);
 
 
@@ -426,13 +429,15 @@
             $description = $row["Description"];
             $price = $row["Price"];
             $quantity = $row["Quantity"];
+            $category = $row["Category"];
+            $rating = $row["Rating"];
             $img_url = $row["Image_url"];
             $is_added = is_added($connection, $product_id, "cart_item");
             $is_wishlist_item = is_added($connection, $product_id, "wish_list");
             $cart_count += $is_added ? 1 : 0;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item);
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item, "category" => $category, "rating" => $rating);
         }
         return array($data, "cart_count" => $cart_count, "success" => true);
     }
