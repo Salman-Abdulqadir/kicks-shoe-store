@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contacts</title>
+    <title>Signup</title>
     <!-- STYLES -->
-    <link rel="stylesheet" href="../styles/login.css" />
+    <link rel="stylesheet" href="../styles/login.css?2" />
     <link rel="stylesheet" href="../styles/style.css?3" />
     <link rel="stylesheet" href="../styles/footer.css" />
 
@@ -57,13 +57,11 @@
   <body onload="get_user_info();">
     <header>
       <nav class="flex">
-        <a href="#"
-          ><img src="../images/logo.png" alt="logo" class="logo"
-        /></a>
+        <a href="#"><img src="../images/logo.png" alt="logo" class="logo" /></a>
         <ul class="links flex">
           <li><a href="../index.html">Home</a></li>
-          <li><a href="./shop.html">Shop</a></li>
-          <li><a href="./contacts.html">Contact</a></li>
+          <li><a href="./shop.php">Shop</a></li>
+          <li><a href="./contacts.php">Contact</a></li>
           <li>
             <a href="./cart.php">
               <i class="fa-solid fa-cart-shopping">
@@ -71,7 +69,7 @@
               >
             </a>
           </li>
-          <li id="login_btn"><a href="./login.html">Login</a></li>
+          <li id="login_btn"><a href="./login.php">Login</a></li>
         </ul>
         <div class="burger">
           <div class="line1"></div>
@@ -84,111 +82,146 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12 col-sm-12">
-            <!-- <img class="top-gradient" src="images/gradient.webp" alt="background-image" width="1500" height="380"> -->
             <div class="top-background-gradient"></div>
             <div class="top-header">
-              <h1>Contact Us</h1>
-              <nav class="top-nav">
-                <a href="index.html"
-                  >Home<span class="home-page-link">
-                    <i class="fa-solid fa-arrow-right"></i> </span
-                ></a>
-                <a href="contacts.html">Contacts</a>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="contacts-list">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="contact-info">
-              <div class="info-item">
-                <i class="fa-solid fa-house"></i>
-                <h6>Abu Dhabi, United Arab Emirates</h6>
-                <p>Khalifa City</p>
-              </div>
-              <div class="info-item">
-                <i class="fa-solid fa-phone"></i>
-                <h6><a href="#">00 971 12 345 6789</a></h6>
-                <p>Mon to Fri 9am to 6 pm</p>
-              </div>
-              <div class="info-item">
-                <i class="fa-solid fa-envelope"></i>
-                <h6><a href="#">support@shoesnatch.com</a></h6>
-                <p>Send us your query anytime!</p>
+              <h1>Register</h1>
+              <div class="top-nav">
+                <a href="login.html">Login</a>
+                <i class="fa fa-arrows-h home-page-link"></i>
+                <a href="signup.html">Register</a>
               </div>
             </div>
-          </div>
-          <div class="col-lg-9">
-            <form
-              class="row contacts-form-box"
-              action="contact_process.php"
-              method="post"
-              id="contactForm"
-              novalidate=""
-            >
-              <div class="col-md-6">
-                <div class="form-inputs">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Enter your name"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'Enter your name'"
-                  />
-                </div>
-                <div class="form-inputs">
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'Enter email address'"
-                  />
-                </div>
-                <div class="form-inputs">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="subject"
-                    name="subject"
-                    placeholder="Enter Subject"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'Enter Subject'"
-                  />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-inputs">
-                  <textarea
-                    class="form-control"
-                    name="message"
-                    id="message"
-                    rows="1"
-                    placeholder="Enter Message"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = 'Enter Message'"
-                  ></textarea>
-                </div>
-              </div>
-              <div class="col-md-12 contacts-button">
-                <button type="submit" value="submit" class="">
-                  Send Message
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>
     </section>
 
+    <section id="login-form">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 image-area">
+            <img src="../images/keyboard.png" alt="image not available" />
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h3>CREATER A NEW ACCOUNT</h3>
+            <div class="row">
+              <div class="form-box" action="" method="post">
+                <div class="col-md-12 compact-entry-area">
+                  <div class="col-md-6">
+                    <input
+                      id="first_name"
+                      class="login-input"
+                      type="text"
+                      name="first_name"
+                      placeholder="First Name"
+                      onfocus="this.placeholder = ''"
+                      onblur="this.placeholder = 'First Name'"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      id="last_name"
+                      class="login-input"
+                      type="text"
+                      name="last_name"
+                      placeholder="Last Name"
+                      onfocus="this.placeholder = ''"
+                      onblur="this.placeholder = 'Last Name'"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-12 compact-entry-area">
+                  <div class="col-md-6">
+                    <input
+                      id="date_of_birth"
+                      type="text"
+                      class="login-input"
+                      placeholder="Date of Birth"
+                      onfocus="this.type='date'"
+                      onblur="this.type='text'"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 select-gender-area">
+                    <select
+                      name="gender"
+                      id="gender"
+                      class="login-input gender-placeholder"
+                      required
+                    >
+                      <option value="" disabled selected hidden>Gender</option>
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <input
+                    type="text"
+                    id="address"
+                    class="login-input"
+                    placeholder="Town, Emirate"
+                    onfocus="this.placeholder=''"
+                    onblur="this.placeholder='Town, Emirate'"
+                    required
+                  />
+                </div>
+                <div class="col-md-12">
+                  <input
+                    id="email"
+                    class="login-input"
+                    type="text"
+                    name="email"
+                    placeholder="Email"
+                    onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = 'Email'"
+                    required
+                  />
+                </div>
+                <div class="col-md-12 signup-password-area">
+                  <div class="col-sm-12">
+                    <input
+                      id="password_register"
+                      class="login-input signup-password"
+                      type="password"
+                      name="password_register"
+                      placeholder="Password"
+                      onfocus="this.placeholder = ''"
+                      onkeyup="compare_passwords();"
+                      onblur="this.placeholder = 'Password'"
+                      required
+                    />
+                  </div>
+                  <div class="col-sm-12">
+                    <input
+                      id="confirm_password_register"
+                      class="login-input signup-password confirm"
+                      type="password"
+                      name="confirm_password_register"
+                      placeholder="Confirm Password"
+                      onfocus="this.placeholder = ''"
+                      onkeyup="compare_passwords();"
+                      onblur="this.placeholder = 'Confirm Password'"
+                      required
+                    />
+                  </div>
+                  <div id="confirm_password_text" class="col-sm-12">
+                    <p></p>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <button onclick="register();" class="login-button">
+                    <strong>signup</strong>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <footer id="footer">
       <div class="container-fluid">
         <div class="row">

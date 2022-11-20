@@ -67,8 +67,8 @@
         <a href="#"><img src="../images/logo.png" alt="logo" class="logo" /></a>
         <ul class="links flex">
           <li><a href="../index.html">Home</a></li>
-          <li><a href="./shop.html">Shop</a></li>
-          <li><a href="./contacts.html">Contact</a></li>
+          <li><a href="./shop.php">Shop</a></li>
+          <li><a href="./contacts.php">Contact</a></li>
           <li>
             <a href="./cart.php">
               <i class="fa-solid fa-cart-shopping">
@@ -76,7 +76,7 @@
               >
             </a>
           </li>
-          <li id="login_btn"><a href="./login.html">Login</a></li>
+          <li id="login_btn"><a href="./login.php">Login</a></li>
         </ul>
         <div class="burger">
           <div class="line1"></div>
