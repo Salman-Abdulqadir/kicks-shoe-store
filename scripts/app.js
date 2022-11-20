@@ -6,6 +6,7 @@ function add_product_item() {
   let price = $("#price").val();
   let quantity = $("#quantity").val();
   let img_url = $("#img_url").val();
+  let category = $("#category").val();
   let description = $("#description").val();
 
   //SENDING AN AJAX REQUEST
@@ -20,10 +21,15 @@ function add_product_item() {
       quantity,
       img_url,
       description,
+      category,
     },
     success: (data) => {
       if (data["success"]) {
-        alert("yay!! you did it");
+        $(".success-message").html("Product Added Successfully!");
+        $(".success-message").css(
+          "animation",
+          "animation: show-message 3s ease-in;"
+        );
         $("#brand").val("");
         $("#price").val("");
         $("#quantity").val("");
@@ -207,11 +213,24 @@ function get_products() {
       if (data["success"]) {
         let filters_array = [category, brand, price, search_input];
         let filters = "";
-        filters += filters_array.filter((element) => {
+        filters_array.forEach((element, index) => {
           if (element) {
-            return element + "->";
+            if (index == 2) {
+              switch (element) {
+                case "low":
+                  filters += "0AED - 99AED > ";
+                  break;
+                case "medium":
+                  filters += "100AED - 499AED > ";
+                  break;
+                case "high":
+                  filters += "500AED & above > ";
+                  break;
+              }
+            } else filters += element + " > ";
           }
         });
+        filters = filters.substring(0, filters.length - 2);
         display_products(data, filters);
       }
 
@@ -262,11 +281,11 @@ function subtotal_html(data) {
   let cart_items = data["cart_items"];
 
   // ADDING THE NUMBER OF ITEMS
-  html += `<div class="flex bordered">
-            <h3>${data["total_quantity"]} items</h3>
+  html += `<div class="flex">
+            <h3>Cart Total: ${data["total_quantity"]} items</h3>
             <p>price</p>
           </div>
-          <div class="order">`;
+          <div class="order-summary">`;
   for (let index in cart_items) {
     let row = cart_items[index];
 
@@ -276,14 +295,21 @@ function subtotal_html(data) {
     let quantity = row["cart_item_quantity"];
 
     html += ` <div class="order-item flex">
-                <p>${quantity} X ${description}</p>
-                <p>AED ${quantity * price}</p>
+                <p>${quantity} ${description} </p>
+                <p>AED ${(quantity * price) / quantity}</p>
               </div>`;
   }
-  html += ` </div><div class="total-amount flex">
-              <p>Total Amount</p>
-              <h4 class="text-warning">AED ${data["total_price"]}</h4>
-            </div>`;
+  html += ` </div>
+            <div class="flex">
+              <h5>Shipping fees</h5>
+              <p>Free shipping</p>
+            </div>
+            <div class="flex">
+              <h5>Subtotal</h5>
+              <h5>AED ${data["total_price"]}</h5>
+            </div>
+            <button class="btn btn-dark py-3">Checkout</button>
+            `;
   $(".subtotal").html(html);
 }
 
@@ -306,10 +332,29 @@ function delete_cart_item(product_id, request) {
   });
 }
 
+//GOT TO THE SHOP PAGE
+const go_to_shop = () => {
+  window.location.href = "./shop.html";
+};
 //DISPLAYING THE CART
 function display_cart(data) {
   let html = "";
   let cart_items = data["cart_items"];
+  console.log(typeof data["cart_item_quantity"]);
+  if (data["total_quantity"] === 0) {
+    console.log("Empty cart");
+    html += `
+      <div class="empty-cart">
+        <img src="../images/empty-cart.png"/>
+        <div>
+          <h2> Seems like your cart is empty</h2>
+          <button onclick="go_to_shop();" class="btn btn-dark">Go to Shop</button>
+        </div>
+      </div>
+    `;
+    $(".cart").html(html);
+    return;
+  }
   for (let index in cart_items) {
     let row = cart_items[index];
 
@@ -342,10 +387,10 @@ function display_cart(data) {
                   <div class = "flex">
                     <h3 id="price">AED${price}</h3>
                     <div>
-                      <button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger">
+                      <button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-warning">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                       </button>
-                      <button onclick="wishlist_requests(${product_id},'add_to_wishlist');delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-dark">
+                      <button onclick="wishlist_requests(${product_id},'add_to_wishlist');delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-warning">
                         Wishlist <i class="fa fa-heart"></i>
                       </button>
                     </div>
@@ -378,7 +423,22 @@ function wishlist_requests(product_id, request) {
   });
 }
 
-// REMOVING WISHLIST ITEM
+// Displaying rating
+function getRating(rating) {
+  let filled = "<i class='fa-solid fa-star' style='color:orange'></i>";
+  let empty = "<i class='fa-solid fa-star' style='color:grey'></i>";
+  let rating_stars = "";
+
+  let i = 0;
+  for (i; i < rating; i++) {
+    rating_stars += filled;
+  }
+  for (i; i < 5; i++) {
+    rating_stars += empty;
+  }
+
+  return rating_stars;
+}
 
 //DISPLAYING THE PRODUCTS AFTER GETTING THEM FROM THE DATABASE
 function display_products(data, filters) {
@@ -391,6 +451,8 @@ function display_products(data, filters) {
     let product_id = row["product_id"];
     let brand = row["brand"];
     let description = row["description"];
+    let category = row["category"];
+    let rating = row["rating"];
     let price = row["price"];
     let quantity = row["quantity"];
     let img_url = row["img_url"];
@@ -399,7 +461,7 @@ function display_products(data, filters) {
 
     html += `
     <div class="product">
-        <div class="product-img">`;
+        <div class="product-img" onclick="alert('hello');">`;
     if (!is_added) {
       if (is_wish) {
         html += `<button onclick="wishlist_requests(${product_id}, 'remove_wishlist_item')" class="add_to_favorite">
@@ -421,14 +483,15 @@ function display_products(data, filters) {
         </div>
         <div class="product-info">
             <h3>${brand}</h3>
-            <p>${description}</p>
+            <div>${getRating(rating)} (${rating}) </div>
+            <p> ${category}</p>
             <h4>${price}AED`;
     if (quantity > 0) {
       html += `<span style="color: ${quantity < 5 ? "tomato" : "lightgray"}">${
         quantity < 5 ? "only " + quantity + " left!" : "In Stock"
-      }</span></h4> </div>`;
+      }</span></h4></div>`;
     } else {
-      html += "</h4></div>";
+      html += `</h4></div>`;
     }
 
     // IF THE PRODUCT IS NOT ADD, ADD A BUTTON THAT ALLOWS THE USER TO ADD IT
@@ -439,13 +502,13 @@ function display_products(data, filters) {
         html += `<button type="button" class="btn btn-dark" disabled data-bs-toggle="button" autocomplete="off"> out of stock
         </button></div>`;
       else {
-        html += `<button type="button" class="btn btn-warning" disabled data-bs-toggle="button" autocomplete="off">added <i class="fa-solid fa-check"></i></button><button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-danger mx-2">
+        html += `<button type="button" class="btn btn-warning" disabled data-bs-toggle="button" autocomplete="off">added <i class="fa-solid fa-check"></i></button><button onclick="delete_cart_item(${product_id}, 'delete_cart_item')" class="btn btn-outline-warning mx-2">
         Remove from cart <i class="fa fa-trash" aria-hidden="true"></i>
       </button></div>`;
       }
     }
   }
-  $("#filter-result").html(filters);
+  $("#filter-result").html(filters ? filters : "All Products");
   $(".latest-products").html(html);
-  console.log();
+  console.log(filters);
 }

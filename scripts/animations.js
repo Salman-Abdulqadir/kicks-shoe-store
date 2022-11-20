@@ -38,3 +38,20 @@ const utitities = () => {
 };
 
 utitities();
+
+let isVisible = false;
+function filter_toggle() {
+  if (!isVisible) {
+    $(".filters").css("display", "flex");
+    isVisible = true;
+    $("#toggle-filter-btn").html(
+      '<i class="fa-solid fa-sliders"></i> Hide Filter'
+    );
+  } else {
+    $(".filters").css("display", "none");
+    isVisible = false;
+    $("#toggle-filter-btn").html(
+      '<i class="fa-solid fa-sliders"></i> Show Filter'
+    );
+  }
+}
