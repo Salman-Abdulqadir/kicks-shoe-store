@@ -450,10 +450,12 @@ function display_products(data, filters) {
     // reading the data from the current row
     let product_id = row["product_id"];
     let brand = row["brand"];
-    let description = row["description"];
     let category = row["category"];
     let rating = row["rating"];
+    let description = row["description"];
     let price = row["price"];
+    let discount_rate = row["discount"];
+    let discount = discount_rate ? (price * discount_rate) / 100 : 0;
     let quantity = row["quantity"];
     let img_url = row["img_url"];
     let is_added = row["is_added"];
@@ -461,7 +463,7 @@ function display_products(data, filters) {
 
     html += `
     <div class="product">
-        <div class="product-img" onclick="alert('hello');">`;
+        <div class="product-img">`;
     if (!is_added) {
       if (is_wish) {
         html += `<button onclick="wishlist_requests(${product_id}, 'remove_wishlist_item')" class="add_to_favorite">
@@ -479,13 +481,26 @@ function display_products(data, filters) {
     }
 
     html += `
-        <img src='../${img_url}' alt="product${product_id}" />
+        <img onclick="show_product_description(${description});" style="cursor: pointer;" src='../${img_url}' alt="product${product_id}" />
         </div>
         <div class="product-info">
             <h3>${brand}</h3>
             <div>${getRating(rating)} (${rating}) </div>
-            <p> ${category}</p>
-            <h4>${price}AED`;
+            <p class="mt-3"> ${category} ${
+      discount > 0
+        ? `<span class="discount badge">Discount -${discount_rate}%</span>`
+        : ""
+    }</p>`;
+
+    //ADDING THE DISCOUNT IF IT IS GREATER THAN ZERO
+    if (discount > 0) {
+      html += `<h4>${price - discount}AED
+                  <span style="text-decoration: line-through;color:lightgrey;"> ${price} AED</span>  
+                </h4><h4>`;
+    } else {
+      html += `<h4> ${price}AED</h4><h4>`;
+    }
+
     if (quantity > 0) {
       html += `<span style="color: ${quantity < 5 ? "tomato" : "lightgray"}">${
         quantity < 5 ? "only " + quantity + " left!" : "In Stock"
@@ -510,5 +525,9 @@ function display_products(data, filters) {
   }
   $("#filter-result").html(filters ? filters : "All Products");
   $(".latest-products").html(html);
-  console.log(filters);
+}
+
+//DISPLAYING THE DESCRIPTION OF A PRODUCT
+function show_product_description(product) {
+  console.log(product);
 }

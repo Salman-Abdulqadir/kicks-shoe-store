@@ -80,7 +80,7 @@
         $description = $_POST["description"];
         $category = $_POST["category"];
 
-        $query = "INSERT INTO product (Brand, Description, Price, Quantity, Image_url, Category, Rating) VALUES ('$brand', '$description', $price, $quantity, '$img_url', '$category', 0)";
+        $query = "INSERT INTO product (Brand, Description, Price, Quantity, Image_url, Category, Rating, Discount) VALUES ('$brand', '$description', $price, $quantity, '$img_url', '$category', 0, 0)";
         $result = mysqli_query($connection, $query);
 
 
@@ -410,7 +410,7 @@
         
         
         // QUERY THAT WILL SELECT ALL THE PRODUCTS FROM THE DB
-        $query = "SELECT * FROM product WHERE $brand_query AND $category_query AND $price_query AND Description LIKE '%$search_input%' ORDER BY Price $sort_price";
+        $query = "SELECT * FROM product WHERE $brand_query AND $category_query AND $price_query AND Description LIKE '%$search_input%' ORDER BY Price - (Price * Discount/100) $sort_price";
 
         $result = mysqli_query($connection, $query);
 
@@ -429,6 +429,7 @@
             $description = $row["Description"];
             $price = $row["Price"];
             $quantity = $row["Quantity"];
+            $discount = $row["Discount"];
             $category = $row["Category"];
             $rating = $row["Rating"];
             $img_url = $row["Image_url"];
@@ -437,7 +438,7 @@
             $cart_count += $is_added ? 1 : 0;
 
             //ADDING THE INFO THE DATA ARRAY
-            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item, "category" => $category, "rating" => $rating);
+            $data[] = array("product_id" => $product_id, "brand" => $brand, "description" => $description, "price" => $price,"quantity" => $quantity,"img_url" => $img_url, "is_added" => $is_added, "is_wish" => $is_wishlist_item, "category" => $category, "rating" => $rating, "discount" => $discount);
         }
         return array($data, "cart_count" => $cart_count, "success" => true);
     }

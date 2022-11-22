@@ -292,7 +292,7 @@ header.title {
   margin: 1rem 0rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .product-info,
 h4 {
@@ -304,10 +304,14 @@ h4 {
   object-fit: contain;
 }
 h4 span {
-  color: tomato;
   font-size: 20px;
-  margin-left: 1rem;
   font-weight: lighter;
+}
+.discount {
+  margin-left: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: tomato;
 }
 .add_to_favorite {
   float: right;
