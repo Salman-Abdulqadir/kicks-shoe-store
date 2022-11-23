@@ -111,7 +111,7 @@ function login() {
     data: { type: "login", username: username, password: password },
     success: function (data) {
       if (data["success"]) {
-        window.location.href = "../index.html";
+        window.location.href = "../index.php";
       }
     },
   });
@@ -125,7 +125,7 @@ function logout(location = "") {
     dataType: "json",
     data: { type: "logout" },
     success: function (data) {
-      window.location.href = location ? "index.html" : "../index.html";
+      window.location.href = location ? "index.php" : "../index.php";
     },
   });
 }
@@ -157,7 +157,7 @@ function register() {
       },
       success: function (data) {
         if (data["success"]) {
-          window.location.href = "login.html";
+          window.location.href = "login.php";
         } else {
           $("#confirm_password_text")
             .text("Something went wrong! Please try again.")
@@ -302,13 +302,13 @@ function subtotal_html(data) {
   html += ` </div>
             <div class="flex">
               <h5>Shipping fees</h5>
-              <p>Free shipping</p>
+              <p>10 AED</p>
             </div>
             <div class="flex">
               <h5>Subtotal</h5>
               <h5>AED ${data["total_price"]}</h5>
             </div>
-            <button class="btn btn-dark py-3">Checkout</button>
+            <button onclick='check_out();window.location.href="./checkout.php"' class="btn btn-dark py-3">Checkout</button>
             `;
   $(".subtotal").html(html);
 }
@@ -334,7 +334,7 @@ function delete_cart_item(product_id, request) {
 
 //GOT TO THE SHOP PAGE
 const go_to_shop = () => {
-  window.location.href = "./shop.html";
+  window.location.href = "./shop.php";
 };
 //DISPLAYING THE CART
 function display_cart(data) {

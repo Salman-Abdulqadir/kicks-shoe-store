@@ -62,6 +62,7 @@ main {
 /* ADD PRODUCT FORM*/
 .add-form {
   padding: 2rem;
+  width: -moz-fit-content;
   width: fit-content;
   margin: 4rem auto;
   border: 1px solid black;
@@ -114,4 +115,41 @@ main {
   .option {
     display: none;
   }
+}
+
+/* .admin-product-table {
+  border: 1px orange solid;
+} */
+
+.delete-product-icon {
+  color: #777;
+  cursor: pointer;
+}
+
+.quantity-input {
+  display: none;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  max-height: 5px;
+  border: 2px #ffe4b2 solid;
+  border-radius: 8px;
+}
+
+.editable_quantity {
+  cursor: pointer;
+}
+
+.content table {
+  margin: 4rem 0rem;
+}
+.content .title {
+  font-size: 5rem;
+  color: #777;
+  font-weight: 300;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

@@ -19,7 +19,7 @@
     // // $_POST["gender"]
     // // $_POST["address"]
 
-    // $request_type = "add_product_item";
+    // $request_type = "check_out";
     // $_POST['brand'] = "Nike";
     // $_POST['category'] = "Men";
     // $_POST['price'] = 120;
@@ -64,13 +64,253 @@
         case "get_wish_list":
             $final_result = get_wish_list($connection);
             break;
+        case "check_out":
+            $final_result = check_out($connection);
+            break;
+        case "change_phone_number":
+            $final_result = change_phone_number($connection);
+            break;
+        case "change_address":
+            $final_result = change_address($connection);
+            break;
+        case "place_order":
+            $final_result = place_order($connection);
+            break;
         case "add_product_item":
             $final_result = add_product_item($connection);
+            break;
+        case "manage_products":
+            $final_result = manage_products($connection);
+            break;
+        case "delete_product_admin":
+            $final_result = delete_product_admin($connection);
+            break;
+        case "manage_quantity":
+            $final_result = manage_quantity($connection);
+            break;
+        case "change_product_quantity":
+            $final_result = change_product_quantity($connection);
+            break;
+        case "change_discount":
+            $final_result = change_discount($connection);
+            break;
+        case "manage_users":
+            $final_result = manage_users($connection);
+            break;
+        case "delete_user":
+            $final_result = delete_user($connection);
             break;
 
     }
     echo json_encode($final_result);
 
+
+    function delete_user($connection) {
+        $user_id = $_POST["user_id"];
+        $query = "DELETE FROM Users WHERE ID=$user_id";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+        return array("success"=>true);
+    }
+
+    function manage_users($connection) {
+        $query = "SELECT * FROM Users";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+        $data = array();
+        while($row=mysqli_fetch_array($result)){
+            $user_id = $row["ID"];
+            $last_name = $row["LastName"];
+            $first_name = $row["FirstName"];
+            $address = $row["Address"];
+            $date_of_birth = $row["DateOfBirth"];
+            $gender = $row["Gender"];
+            $email = $row["Email"];
+            $phone_num = $row["PhoneNumber"];
+            $data[] = array("user_id"=>$user_id, "last_name"=>$last_name, "first_name"=>$first_name, "address"=>$address, "date_of_birth"=>$date_of_birth, "gender"=>$gender, "email"=>$email, "phone_num"=>$phone_num);
+        }
+        return array("data"=>$data);
+    }
+
+    function change_discount($connection) {
+        $discount = $_POST["discount"];
+        $product_id = $_POST["product_id"];
+        $query = "UPDATE product SET Discount=$discount WHERE Product_id=$product_id";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+        return array("success"=>true);
+    }
+
+    function change_product_quantity($connection) {
+        $quantity = $_POST["quantity"];
+        $product_id = $_POST["product_id"];
+        $query = "UPDATE product SET Quantity=$quantity WHERE Product_id=$product_id";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+        return array("success"=>true);
+    }
+
+    function manage_quantity($connection) {
+        $query = "SELECT * FROM product";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+
+        $data = array();
+        while($row=mysqli_fetch_array($result)){
+            $product_id = $row["Product_id"];
+            $brand = $row["Brand"];
+            $description = $row["Description"];
+            $price = $row["Price"];
+            $quantity = $row["Quantity"];
+            $discount = $row["Discount"];
+            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "quantity"=>$quantity, "discount"=>$discount);
+        }
+        return array("data"=>$data);
+    }
+
+    function delete_product_admin($connection) {
+        $product_id = $_POST["product_id"];
+        $query = "DELETE FROM product WHERE Product_id=$product_id";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+        return array("success"=>true);
+    }
+
+    function manage_products($connection) {
+        $query = "SELECT * FROM product";
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            return array("success"=>false);
+        }
+
+        $data = array();
+        while($row=mysqli_fetch_array($result)){
+            $product_id = $row["Product_id"];
+            $brand = $row["Brand"];
+            $description = $row["Description"];
+            $price = $row["Price"];
+            $quantity = $row["Quantity"];
+            $img_url = $row["Image_url"];
+            $category = $row["Category"];
+            $rating = $row["Rating"];
+            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "quantity"=>$quantity, "img_url"=>$img_url, "category"=>$category, "rating"=>$rating);
+        }
+        return array("data"=>$data);
+    }
+
+    function change_address($connection) {
+        if (isset($_SESSION["user_id"])) {
+            $user_id = $_SESSION["user_id"];
+            $address = $_POST["address"];
+            if ($address=="" || $address==null) {
+                return array("success"=>false, "error_message"=>"address field required");
+            }
+            $query = "UPDATE Users SET Address='$address' WHERE ID=$user_id";
+            $result = mysqli_query($connection, $query);
+            if(!$result){
+                return array("success"=>false);
+            }
+            return array("success"=>true, $address);
+        }
+    }
+
+    function change_phone_number($connection){
+        if (isset($_SESSION["user_id"])) {
+            $user_id = $_SESSION["user_id"];
+            $phone_num = $_POST["phone_number"];
+            if ($phone_num=="" || $phone_num==null) {
+                return array("success"=>false, "error_message"=>"phone number field required");
+            }
+            if (!is_numeric(strval($phone_num))) {
+                return array("success"=>false, "error_message"=>"invalid input!");
+            }
+            $query = "UPDATE Users SET PhoneNumber='$phone_num' WHERE ID=$user_id";
+            $result = mysqli_query($connection, $query);
+            if(!$result){
+                return array("success"=>false);
+            }
+            return array("success"=>true);
+        }
+    }
+
+    function check_out($connection) {
+        $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : "";
+        $query = "SELECT * FROM cart_item INNER JOIN product ON cart_item.Product_id = product.Product_id INNER JOIN users ON cart_item.User_id = users.ID WHERE cart_item.User_id = $user_id";
+        $result = mysqli_query($connection, $query);
+
+        if(!$result)
+            die("Database access failed: " . mysqli_error($connection));
+        
+        $data = array();
+        $total_price = 0;
+        $total_cart_items = 0;
+        $delivery_charge = 10;
+
+        //LOOPING THROUGH THE RESULT OF THE QUERY AND EXTRACTING THE INFO FROM EACH ROW
+        while($row = mysqli_fetch_array($result)){
+            $product_id = $row["Product_id"];
+            $brand = $row["Brand"];
+            $description = $row["Description"];
+            $cart_item_quantity = $row["Item_quantity"];
+            $product_quantity = $row["Quantity"];
+            $price = $row["Price"]*$cart_item_quantity;
+            $img_url = $row["Image_url"];
+            $phone_num = $row["PhoneNumber"];
+            $first_name = $row["FirstName"];
+            $last_name = $row["LastName"];
+            $address = $row["Address"];
+            $total_price += $price;
+            $total_cart_items += $cart_item_quantity;
+            
+
+            //ADDING THE INFO THE DATA ARRAY
+            $data[] = array("product_id"=>$product_id, "brand"=>$brand, "description"=>$description, "price"=>$price, "img_url"=>$img_url, "cart_item_quantity"=>$cart_item_quantity, "product_quantity"=>$product_quantity);
+        } 
+        $total_price = 0.05*$total_price + $total_price;
+        return array("cart_items" => $data, "total_price" => $total_price, "total_quantity" => $total_cart_items, "vat" => round(0.05*($total_price+$delivery_charge)), "delivery_charge"=>$delivery_charge, "phone_number"=>$phone_num, "address"=>$address, "full_name"=>$first_name." ".$last_name);
+    }
+
+    //PLACE ORDER
+    function place_order($connection) {
+        if (isset($_SESSION["user_id"])) {
+            $user_id = $_SESSION["user_id"];
+            $payment_type = $_POST["payment_type"];
+            $shipping_address = $_POST["shipping_address"];
+            $status = "Completed";
+            $date = date("Y-m-d");
+            $query = "INSERT INTO orders (PaymentType, Status, User_id, Date, ShippingAddress) VALUES ('$payment_type', $status, $user_id, '$date', '$shipping_address')";
+            $result = mysqli_query($connection, $query);
+            $last_id = $connection->lastInsertId();
+            $query_select = "SELECT * FROM cart_item WHERE User_id=$user_id";
+            $res_select = mysqli_query($connection, $query_select);
+            while($row = mysqli_fetch_array($res_select)){
+                $prod_id = $row['Product_id'];
+                $item_qty = $row['Item_quantity'];
+                $query_transactions = "INSERT INTO transactions (Product_id, User_id, Order_id, Item_quantity) VALUES ($prod_id, $user_id, $last_id, $item_qty)";
+                $res_transaction = mysqli_query($connection, $query_transactions);
+            }
+            if (!$result || !$res_select || !$res_transaction) {
+                return array("success"=>false);
+            }
+            $query_delete_cartItem = "DELETE FROM cart_item WHERE user_id=$user_id";
+            $res_delete_cartItem = mysqli_query($connection, $query_delete_cartItem);
+            if (!$res_delete_cartItem) {
+                return array("success"=>false);
+            }
+        }
+    }
     //ADDING A PRODUCT TO THE PRODUCT TABLE
     function add_product_item($connection){
         $brand = $_POST["brand"];
@@ -442,7 +682,4 @@
         }
         return array($data, "cart_count" => $cart_count, "success" => true);
     }
-
-
-
 ?>
