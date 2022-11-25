@@ -130,7 +130,7 @@ main {
   display: none;
   max-width: -moz-fit-content;
   max-width: fit-content;
-  max-height: 5px;
+  /* min-height: 5px; */
   border: 2px #ffe4b2 solid;
   border-radius: 8px;
 }

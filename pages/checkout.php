@@ -145,5 +145,5 @@
   </body>
   <script src="../scripts/animations.js"></script>
   <script src="../scripts/app.js?97"></script>
-  <script src="../scripts/checkout.js"></script>
+  <script src="../scripts/checkout.js?18"></script>
 </html>

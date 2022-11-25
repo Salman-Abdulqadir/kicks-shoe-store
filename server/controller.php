@@ -10,6 +10,14 @@
     $request_type = isset($_POST["type"]) ? $_POST["type"] : "";
     $final_result = array();
 
+
+    // $_POST["first_name"] = "sjlkf";
+    // $_POST["email"] = "salaman@gmail.com";
+    // $_POST["last_name"] = "jfdsk;";
+    // $_POST["date_of_birth"] = "1995-03-01";
+    // $_POST["gender"] = "M";
+    // $_POST["address"] = "dfjaks;df";
+    // $_POST["password"] = "1234";
     // //SIMULATION
     // $_POST["brand"] = "Gucci";
     // $_POST["quantity"] = 20;
@@ -19,7 +27,7 @@
     // // $_POST["gender"]
     // // $_POST["address"]
 
-    // $request_type = "check_out";
+    // $request_type = "place_order";
     // $_POST['brand'] = "Nike";
     // $_POST['category'] = "Men";
     // $_POST['price'] = 120;
@@ -286,29 +294,37 @@
     function place_order($connection) {
         if (isset($_SESSION["user_id"])) {
             $user_id = $_SESSION["user_id"];
-            $payment_type = $_POST["payment_type"];
-            $shipping_address = $_POST["shipping_address"];
+            // $payment_type = $_POST["payment_type"];
+            // $shipping_address = $_POST["shipping_address"];
+            $payment_type = "cash";
+            $shipping_address = "alkd";
             $status = "Completed";
             $date = date("Y-m-d");
-            $query = "INSERT INTO orders (PaymentType, Status, User_id, Date, ShippingAddress) VALUES ('$payment_type', $status, $user_id, '$date', '$shipping_address')";
+            $query = "INSERT INTO orders (PaymentType, Status, User_id, Date, ShippingAddress) VALUES ('$payment_type', '$status', $user_id, '$date', '$shipping_address')";
             $result = mysqli_query($connection, $query);
-            $last_id = $connection->lastInsertId();
+            $last_id_query = "SELECT LAST_INSERT_ID()";
+            $last_id_res = mysqli_query($connection, $last_id_query);
+            $last_id = mysqli_fetch_column($last_id_res);
             $query_select = "SELECT * FROM cart_item WHERE User_id=$user_id";
             $res_select = mysqli_query($connection, $query_select);
+            if (!$result || !$res_select || !$last_id_res) {
+                return array("success"=>false);
+            }
             while($row = mysqli_fetch_array($res_select)){
                 $prod_id = $row['Product_id'];
                 $item_qty = $row['Item_quantity'];
                 $query_transactions = "INSERT INTO transactions (Product_id, User_id, Order_id, Item_quantity) VALUES ($prod_id, $user_id, $last_id, $item_qty)";
                 $res_transaction = mysqli_query($connection, $query_transactions);
-            }
-            if (!$result || !$res_select || !$res_transaction) {
-                return array("success"=>false);
+                if(!$res_transaction){
+                    return array("success"=>false);
+                }
             }
             $query_delete_cartItem = "DELETE FROM cart_item WHERE user_id=$user_id";
             $res_delete_cartItem = mysqli_query($connection, $query_delete_cartItem);
             if (!$res_delete_cartItem) {
                 return array("success"=>false);
             }
+            return array("success"=>true);
         }
     }
     //ADDING A PRODUCT TO THE PRODUCT TABLE
@@ -367,9 +383,9 @@
             $address = $_POST["address"];
             $password = $_POST["password"];
 
-            $query = "INSERT INTO Users (LastName, FirstName, Address, DateOfBirth, Gender, Email, Password)
+            $query = "INSERT INTO Users (LastName, FirstName, Address, DateOfBirth, Gender, Email, Password, PhoneNumber)
                         VALUES  ('$last_name', '$first_name', '$address', '$date_of_birth', 
-                                '$gender', '$email', '$password')";
+                                '$gender', '$email', '$password', 0)";
             $result = mysqli_query($connection, $query);
             if (!$result) {
                 return array("success"=>false);
